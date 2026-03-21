@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 전자책 메이커 v2</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --g:#1A7A3C;--gd:#0F5228;--gl:#E8F5ED;--gp:#F2FAF5;--ga:#4CAF72;
+  --ch:#1A1A2E;--dk:#2D2D2D;--md:#555;--gr:#888;--br:#E2E8F0;
+  --bg:#F8FAFB;--wh:#FFF;
+  --fn:'Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',sans-serif;
+  --radius:10px;--shadow:0 1px 4px rgba(0,0,0,.07);--shadow-lg:0 6px 24px rgba(0,0,0,.1);
+}
+body{font-family:var(--fn);background:var(--bg);color:var(--dk);min-height:100vh}
+
+/* ── NAV ── */
+nav{background:var(--ch);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.3)}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-ic{background:var(--g);color:#fff;width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900}
+.logo-tx{color:#fff;font-size:15px;font-weight:700}.logo-tx em{color:var(--ga);font-style:normal}
+.logo-sub{color:#666;font-size:10px}
+.nav-badges{display:flex;gap:6px;align-items:center}
+.nbadge{padding:3px 9px;border-radius:20px;font-size:10px;font-weight:600}
+.nb-ok{background:rgba(74,222,128,.15);color:#4ade80}
+.nb-off{background:rgba(255,255,255,.06);color:#666}
+
+/* ── LAYOUT ── */
+.wrap{max-width:1100px;margin:0 auto;padding:24px 20px;display:grid;grid-template-columns:1fr 420px;gap:20px}
+@media(max-width:900px){.wrap{grid-template-columns:1fr}}
+.left{display:flex;flex-direction:column;gap:16px}
+
+/* ── HERO ── */
+.hero{background:linear-gradient(135deg,var(--ch) 0%,#0F2418 100%);border-radius:14px;padding:36px 28px 30px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-30px;right:-30px;width:160px;height:160px;border-radius:50%;background:rgba(26,122,60,.2)}
+.hero-badge{display:inline-block;padding:3px 12px;border-radius:20px;background:rgba(76,175,114,.2);color:var(--ga);font-size:11px;font-weight:700;margin-bottom:12px;border:1px solid rgba(76,175,114,.3);position:relative;z-index:1}
+.hero h1{font-size:22px;font-weight:900;color:#fff;line-height:1.4;margin-bottom:8px;position:relative;z-index:1}
+.hero h1 em{color:var(--ga);font-style:normal}
+.hero p{font-size:12.5px;color:#aaa;line-height:1.7;position:relative;z-index:1}
+.flow{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:14px;flex-wrap:wrap;position:relative;z-index:1}
+.flow-s{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);padding:5px 12px;border-radius:7px;font-size:11px;color:#ccc}
+.flow-a{color:var(--ga);font-size:14px}
+
+/* ── CARD ── */
+.card{background:var(--wh);border-radius:var(--radius);border:1px solid var(--br);overflow:hidden;box-shadow:var(--shadow)}
+.card-h{padding:14px 18px;border-bottom:1px solid var(--br);display:flex;align-items:center;justify-content:space-between}
+.card-h h3{font-size:13.5px;font-weight:700;display:flex;align-items:center;gap:7px}
+.card-b{padding:18px}
+
+/* ── INPUT ── */
+.tabs{display:flex;border-bottom:1px solid var(--br)}
+.tab{flex:1;padding:12px;background:none;border:none;font-family:var(--fn);font-size:13px;font-weight:600;color:var(--gr);cursor:pointer;border-bottom:2.5px solid transparent;transition:.15s}
+.tab.on{color:var(--g);border-bottom-color:var(--g);background:var(--gp)}
+.tc{display:none;padding:16px}.tc.on{display:block}
+.inp{padding:9px 12px;border:1.5px solid var(--br);border-radius:8px;font-size:13px;font-family:var(--fn);outline:none;width:100%;color:var(--dk);transition:.15s}
+.inp:focus{border-color:var(--g);box-shadow:0 0 0 3px rgba(26,122,60,.08)}
+textarea.inp{resize:vertical;min-height:180px;line-height:1.8}
+.tf{display:flex;align-items:center;justify-content:space-between;margin-top:6px}
+.char-c{font-size:11px;color:var(--gr)}
+.sbtn{padding:5px 11px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;font-family:var(--fn);background:var(--bg);color:var(--md);border:1px solid var(--br)}
+
+/* ── OPTIONS ── */
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.opt-c{background:var(--bg);border-radius:9px;border:1px solid var(--br);padding:12px}
+.opt-l{font-size:11px;font-weight:700;color:var(--md);margin-bottom:7px}
+.opt-full{grid-column:1/-1}
+.theme-ps{display:flex;gap:5px;flex-wrap:wrap}
+.tp{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;border:2px solid transparent;transition:.15s}
+.tp.on{border-color:#1A1A2E}
+.hint-a{width:100%;padding:8px 10px;border:1.5px solid var(--br);border-radius:7px;font-size:12.5px;font-family:var(--fn);outline:none;resize:none;height:56px;line-height:1.6}
+.hint-a:focus{border-color:var(--g)}
+.layout-btns{display:flex;gap:6px}
+.layout-btn{flex:1;padding:6px;border:1.5px solid var(--br);border-radius:7px;font-size:11px;font-weight:600;cursor:pointer;background:white;font-family:var(--fn);color:var(--md);transition:.15s;text-align:center}
+.layout-btn.on{border-color:var(--g);background:var(--gl);color:var(--gd)}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;margin-top:8px}
+.toggle-row label{font-size:12px;color:var(--md)}
+.toggle{position:relative;width:36px;height:20px}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;cursor:pointer;inset:0;background:#ccc;border-radius:20px;transition:.3s}
+.toggle-slider::before{content:'';position:absolute;height:14px;width:14px;left:3px;bottom:3px;background:white;border-radius:50%;transition:.3s}
+.toggle input:checked + .toggle-slider{background:var(--g)}
+.toggle input:checked + .toggle-slider::before{transform:translateX(16px)}
+
+/* ── GEN BTN ── */
+.gen-wrap{text-align:center}
+.gen{padding:14px 48px;font-size:15px;font-weight:700;background:linear-gradient(135deg,var(--g),var(--gd));color:#fff;border:none;border-radius:50px;cursor:pointer;font-family:var(--fn);transition:.2s;box-shadow:0 4px 18px rgba(26,122,60,.35);display:inline-flex;align-items:center;gap:8px}
+.gen:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 6px 24px rgba(26,122,60,.45)}
+.gen:disabled{background:#aaa;box-shadow:none;cursor:not-allowed;transform:none}
+.spin{animation:spin .7s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── PROGRESS ── */
+.prog{display:none;background:var(--wh);border-radius:var(--radius);border:1px solid var(--br);padding:20px}
+.prog.on{display:block}
+.steps{display:flex;gap:8px;align-items:flex-start;margin-bottom:14px}
+.step-item{display:flex;flex-direction:column;align-items:center;gap:3px}
+.sd{width:26px;height:26px;border-radius:50%;background:var(--br);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;transition:.3s}
+.sd.act{background:var(--g);animation:pulse .8s ease infinite}
+.sd.dn{background:var(--ga)}
+.sl{flex:1;height:1.5px;background:var(--br);margin-top:13px}
+.sl.dn{background:var(--ga)}
+.step-lbl{font-size:10px;color:var(--gr);white-space:nowrap;text-align:center}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(26,122,60,.4)}50%{box-shadow:0 0 0 5px rgba(26,122,60,0)}}
+.prog-msg{font-size:13px;color:var(--md);text-align:center;margin-bottom:10px}
+.pbw{height:5px;background:var(--br);border-radius:10px;overflow:hidden}
+.pb{height:100%;background:linear-gradient(90deg,var(--g),var(--ga));border-radius:10px;transition:width .5s;width:0}
+
+/* ── RESULT ── */
+.result{display:none;background:var(--wh);border-radius:var(--radius);border:2px solid var(--ga);padding:20px;box-shadow:0 4px 16px rgba(26,122,60,.1)}
+.result.on{display:block}
+.rbadge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;background:var(--gl);color:var(--gd);font-size:11px;font-weight:700;margin-bottom:8px}
+.rtitle{font-size:18px;font-weight:900;color:var(--ch);margin-bottom:4px}
+.rmeta{font-size:12px;color:var(--gr);display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.dl-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.dl-btn{padding:10px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--fn);transition:.15s;display:flex;align-items:center;justify-content:center;gap:6px;border:none}
+.dl-pdf{background:var(--g);color:#fff}.dl-pdf:hover{background:var(--gd)}
+.dl-epub{background:var(--ch);color:#fff}.dl-epub:hover{background:#111}
+.dl-img{background:var(--bg);color:var(--md);border:1.5px solid var(--br);grid-column:1/-1}.dl-img:hover{background:var(--br)}
+.chips{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px}
+.chip{padding:3px 8px;border-radius:20px;font-size:10.5px;font-weight:600}
+.cp{background:#EEF2FF;color:#4F46E5}.cc{background:var(--gl);color:var(--gd)}
+.cs{background:#E8F5ED;color:var(--g)}.cn{background:#F8FAFC;color:#64748B}
+.ck{background:#FFFBEA;color:#92400E}.cb{background:#F1F5F9;color:#94A3B8}
+.cch{background:#EFF6FF;color:#1D4ED8}.cit{background:#F3F0FF;color:#5B21B6}
+.reset-btn{width:100%;padding:9px;border-radius:7px;background:var(--bg);border:1px solid var(--br);font-size:12.5px;color:var(--md);cursor:pointer;font-family:var(--fn)}
+
+/* ── BLOCK EDITOR (3단계) ── */
+.editor-section{display:none;margin-top:14px;border-top:1px solid var(--br);padding-top:14px}
+.editor-section.on{display:block}
+.editor-section h4{font-size:12px;font-weight:700;color:var(--md);margin-bottom:8px;letter-spacing:.5px}
+.block-list-edit{max-height:240px;overflow-y:auto;display:flex;flex-direction:column;gap:4px}
+.be-item{display:flex;align-items:center;gap:6px;padding:6px 8px;border:1px solid var(--br);border-radius:6px;background:white;font-size:11.5px}
+.be-tag{padding:2px 7px;border-radius:4px;font-size:10px;font-weight:700;white-space:nowrap}
+.be-text{flex:1;color:var(--md);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.be-edit{background:none;border:1px solid var(--br);border-radius:4px;padding:2px 7px;font-size:10px;cursor:pointer;font-family:var(--fn)}
+.be-edit:hover{background:var(--gl);border-color:var(--ga)}
+
+/* ── PREVIEW PANEL ── */
+.preview-panel{background:var(--ch);border-radius:var(--radius);overflow:hidden;height:calc(100vh - 120px);position:sticky;top:76px;display:flex;flex-direction:column}
+.pv-header{padding:12px 16px;border-bottom:1px solid #333;display:flex;align-items:center;justify-content:space-between}
+.pv-header span{color:#ccc;font-size:12px;font-weight:600}
+.pv-btns{display:flex;gap:4px}
+.pv-btn{padding:4px 10px;border-radius:5px;border:1px solid #444;font-size:11px;cursor:pointer;background:none;color:#aaa;font-family:var(--fn)}
+.pv-btn.on{background:var(--g);color:#fff;border-color:var(--gd)}
+.pv-area{flex:1;overflow:hidden;position:relative}
+.pv-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:#777}
+.pv-placeholder .big{font-size:40px}
+.pv-placeholder p{font-size:12px;text-align:center;line-height:1.6}
+iframe.pv-iframe{width:100%;height:100%;border:none;display:block;background:white}
+pre.json-view{display:none;height:100%;overflow:auto;background:#111;padding:14px;font-size:10px;font-family:monospace;color:#7ee;line-height:1.6;white-space:pre-wrap;word-break:break-all}
+.pv-hint{padding:6px 16px;font-size:10px;color:#555;text-align:center;border-top:1px solid #333;flex-shrink:0}
+
+/* ── HISTORY (3단계) ── */
+.history-panel{display:none}
+.history-panel.on{display:block}
+.hist-item{padding:10px 14px;border-bottom:1px solid var(--br);cursor:pointer;transition:.12s;display:flex;align-items:center;gap:10px}
+.hist-item:hover{background:var(--gp)}
+.hist-dot{width:8px;height:8px;border-radius:50%;background:var(--g);flex-shrink:0}
+.hist-info{flex:1;min-width:0}
+.hist-title{font-size:12.5px;font-weight:700;color:var(--dk);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hist-meta{font-size:10.5px;color:var(--gr)}
+
+/* ── EXAMPLES ── */
+.ex-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.ex-c{background:white;border:1.5px solid var(--br);border-radius:8px;padding:12px;cursor:pointer;transition:.15s}
+.ex-c:hover{border-color:var(--ga);background:var(--gp);transform:translateY(-1px)}
+.ex-ic{font-size:20px;margin-bottom:5px}
+.ex-t{font-size:12px;font-weight:700;color:var(--dk);margin-bottom:2px}
+.ex-d{font-size:10.5px;color:var(--gr);line-height:1.5}
+.ex-tag{margin-top:5px;display:inline-block;padding:1px 7px;background:var(--gl);color:var(--g);border-radius:3px;font-size:10px;font-weight:600}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--ch);color:#fff;padding:9px 18px;border-radius:8px;font-size:12.5px;z-index:9999;transition:.3s;box-shadow:var(--shadow-lg);pointer-events:none}
+.toast.on{transform:translateX(-50%) translateY(0)}
+.tok{background:var(--gd)}.terr{background:#991B1B}
+
+/* ── EDIT MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;align-items:center;justify-content:center}
+.modal-overlay.on{display:flex}
+.modal{background:white;border-radius:var(--radius);padding:22px;width:90%;max-width:520px;max-height:80vh;overflow-y:auto}
+.modal h3{font-size:15px;font-weight:700;margin-bottom:14px;color:var(--ch)}
+.modal-btns{display:flex;gap:8px;margin-top:16px;justify-content:flex-end}
+.mbtn{padding:8px 18px;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--fn);border:none}
+.mbtn-ok{background:var(--g);color:#fff}.mbtn-ok:hover{background:var(--gd)}
+.mbtn-cancel{background:var(--bg);color:var(--md);border:1px solid var(--br)}.mbtn-cancel:hover{background:var(--br)}
+
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:#DDD;border-radius:4px}
+/* 설정 서브탭 */
+.stab-area{display:none;padding:14px}.stab-area.on{display:block}
+/* 프리셋 버튼 */
+.preset-btn{padding:5px 11px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;font-family:var(--fn);border:1.5px solid var(--br);background:white;color:var(--md);transition:.15s}
+.preset-btn.on{border-color:var(--g);background:var(--gl);color:var(--gd)}
+.preset-btn:hover{border-color:var(--ga)}
+/* 맞춤법 버튼 */
+.spell-btn{width:100%;padding:9px 14px;border-radius:7px;background:var(--ch);color:white;border:none;font-size:12.5px;font-weight:600;cursor:pointer;font-family:var(--fn);transition:.15s;display:flex;align-items:center;justify-content:center;gap:7px}
+.spell-btn:hover:not(:disabled){background:#111}
+.spell-btn:disabled{background:#aaa;cursor:not-allowed}
+/* 다운로드 3열 */
+.dl-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:8px}
+.dl-print{background:#1E3A5F;color:#fff}.dl-print:hover{background:#0F2040}
+/* toggle */
+.toggle-row{display:flex;align-items:center;justify-content:space-between;margin-top:6px}
+.toggle-row label.trlab{font-size:12px;color:var(--md)}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">
+    <div class="logo-ic">AI</div>
+    <div>
+      <div class="logo-tx"><em>전자책</em> 메이커 v2</div>
+      <div class="logo-sub">원고 → 출판 품질 전자책 자동 생성</div>
+    </div>
+  </div>
+  <div class="nav-badges">
+    <span class="nbadge nb-off" id="badge-claude">Claude ···</span>
+    <span class="nbadge nb-off" id="badge-gemini">Gemini ···</span>
+    <span class="nbadge nb-off" id="badge-supabase">DB ···</span>
+  </div>
+</nav>
+
+<div class="wrap">
+<div class="left">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge">✨ AI 자동 전자책 생성 v2</div>
+    <h1>유튜브 대본, 강의 스크립트가<br><em>출판 품질 전자책</em>이 됩니다</h1>
+    <p>차트·인포그래픽 표·이미지까지 자동 생성 | PDF + EPUB 동시 제공</p>
+    <div class="flow">
+      <div class="flow-s">📝 원고 입력</div>
+      <div class="flow-a">→</div>
+      <div class="flow-s">🤖 AI 구조화</div>
+      <div class="flow-a">→</div>
+      <div class="flow-s">📊 차트·표 자동생성</div>
+      <div class="flow-a">→</div>
+      <div class="flow-s">📄 PDF+EPUB</div>
+    </div>
+  </div>
+
+  <!-- 원고 입력 -->
+  <div class="card">
+    <div class="tabs">
+      <button class="tab on" id="tab-text" onclick="sw('text')">✏️ 원고 직접 입력</button>
+      <button class="tab" id="tab-hist" onclick="sw('hist')">📚 히스토리</button>
+    </div>
+    <div class="tc on" id="tc-text">
+      <textarea class="inp" id="raw-text"
+        placeholder="유튜브 대본, 강의 스크립트, 블로그 글 등을 붙여넣어 주세요.&#10;&#10;AI가 자동으로 챕터·섹션·차트·인포그래픽 표·팁박스 등을 구성해&#10;출판 품질 전자책 PDF + EPUB을 만들어 드립니다."
+        oninput="document.getElementById('char-c').textContent=this.value.length.toLocaleString()+'자'"
+      ></textarea>
+      <div class="tf">
+        <span class="char-c" id="char-c">0자</span>
+        <button class="sbtn" onclick="document.getElementById('raw-text').value='';document.getElementById('char-c').textContent='0자'">초기화</button>
+      </div>
+    </div>
+    <div class="tc" id="tc-hist">
+      <div id="hist-loading" style="text-align:center;padding:20px;font-size:12px;color:var(--gr);">히스토리 불러오는 중...</div>
+      <div class="block-list-edit history-panel" id="hist-list"></div>
+    </div>
+  </div>
+
+  <!-- 설정 탭 -->
+  <div class="card">
+    <div class="tabs">
+      <button class="tab on" id="stab-basic" onclick="swSet('basic')">📚 기본 설정</button>
+      <button class="tab" id="stab-typo" onclick="swSet('typo')">🔤 타이포그래피</button>
+      <button class="tab" id="stab-publish" onclick="swSet('publish')">📋 출판 정보</button>
+      <button class="tab" id="stab-print" onclick="swSet('print')">🖨️ 인쇄 납품</button>
+    </div>
+
+    <!-- 기본 설정 -->
+    <div class="tc on" id="stc-basic" style="padding:14px">
+      <div class="opts">
+        <div class="opt-c">
+          <div class="opt-l">✍️ 책 제목 (선택)</div>
+          <input type="text" class="inp" id="opt-title" placeholder="비우면 AI가 자동 생성">
+        </div>
+        <div class="opt-c">
+          <div class="opt-l">👤 저자명</div>
+          <input type="text" class="inp" id="opt-author" placeholder="도야교수" value="도야교수">
+        </div>
+        <div class="opt-c">
+          <div class="opt-l">🎨 테마 컬러</div>
+          <div class="theme-ps">
+            <span class="tp on" style="background:#E8F5ED;color:#1A7A3C;border-color:#1A1A2E" onclick="setTh('green','그린',this)">🌿 그린</span>
+            <span class="tp" style="background:#E8F0FB;color:#1E50A2" onclick="setTh('blue','블루',this)">💙 블루</span>
+            <span class="tp" style="background:#FDECEA;color:#C0392B" onclick="setTh('red','레드',this)">❤️ 레드</span>
+            <span class="tp" style="background:#F3E8FA;color:#6C3483" onclick="setTh('purple','퍼플',this)">💜 퍼플</span>
+            <span class="tp" style="background:#E8ECF5;color:#1B2A4A" onclick="setTh('navy','네이비',this)">🌊 네이비</span>
+          </div>
+        </div>
+        <div class="opt-c">
+          <div class="opt-l">📐 레이아웃</div>
+          <div class="layout-btns">
+            <button class="layout-btn on" id="lay-1" onclick="setLayout('1col',this)">■ 1단</button>
+            <button class="layout-btn" id="lay-2" onclick="setLayout('2col',this)">▥ 2단</button>
+          </div>
+          <div class="toggle-row" style="margin-top:8px">
+            <label style="font-size:12px;color:var(--mid)">🍌 챕터 이미지</label>
+            <label class="toggle"><input type="checkbox" id="use-images"><span class="toggle-slider"></span></label>
+          </div>
+        </div>
+        <div class="opt-c opt-full">
+          <div class="opt-l">💬 AI 추가 요청</div>
+          <textarea class="hint-a" id="opt-hint" placeholder="예: 표를 많이 써줘 / 차트를 자주 활용해 / 챕터 5개로 / 소상공인 대상으로"></textarea>
+        </div>
+        <!-- 맞춤법 교정 버튼 -->
+        <div class="opt-c opt-full">
+          <div class="opt-l">✍️ 맞춤법·문체 교정</div>
+          <button class="spell-btn" id="spell-btn" onclick="runSpellcheck()">
+            <span id="spell-ic">🔍</span> 원고 교정하기 (구어체→문어체 + 맞춤법)
+          </button>
+          <div id="spell-result" style="display:none;margin-top:6px;padding:8px;background:var(--green-l);border-radius:6px;font-size:11px;color:var(--green-d);">
+            ✅ 교정 완료. 원고가 수정됐어요.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 타이포그래피 -->
+    <div class="tc" id="stc-typo" style="padding:14px">
+      <div class="opts">
+        <div class="opt-c opt-full">
+          <div class="opt-l">출판 유형 프리셋</div>
+          <div style="display:flex;gap:5px;flex-wrap:wrap" id="typo-presets">
+            <button class="preset-btn on" data-preset="business" onclick="setTypoPreset('business',this)">자기계발</button>
+            <button class="preset-btn" data-preset="novel" onclick="setTypoPreset('novel',this)">소설/에세이</button>
+            <button class="preset-btn" data-preset="textbook" onclick="setTypoPreset('textbook',this)">교재/전문서</button>
+            <button class="preset-btn" data-preset="kids" onclick="setTypoPreset('kids',this)">아동/청소년</button>
+          </div>
+        </div>
+        <div class="opt-c">
+          <div class="opt-l">본문 폰트 크기 (pt)</div>
+          <div style="display:flex;align-items:center;gap:6px">
+            <input type="range" id="font-size" min="9" max="14" step="0.5" value="10.5" style="flex:1" oninput="updateTypo()">
+            <span id="fs-val" style="font-size:11px;font-weight:700;color:var(--green);min-width:30px">10.5</span>
+          </div>
+        </div>
+        <div class="opt-c">
+          <div class="opt-l">행간 (배수)</div>
+          <div style="display:flex;align-items:center;gap:6px">
+            <input type="range" id="line-height" min="1.6" max="2.4" step="0.05" value="2.0" style="flex:1" oninput="updateTypo()">
+            <span id="lh-val" style="font-size:11px;font-weight:700;color:var(--green);min-width:30px">2.0</span>
+          </div>
+        </div>
+        <div class="opt-c">
+          <div class="opt-l">들여쓰기 (mm)</div>
+          <div style="display:flex;align-items:center;gap:6px">
+            <input type="range" id="indent" min="0" max="10" step="1" value="5" style="flex:1" oninput="updateTypo()">
+            <span id="ind-val" style="font-size:11px;font-weight:700;color:var(--green);min-width:25px">5</span>
+          </div>
+        </div>
+        <div class="opt-c">
+          <div class="opt-l">자간</div>
+          <select class="inp" id="letter-spacing" onchange="updateTypo()">
+            <option value="-0.04em">촘촘 (-4%)</option>
+            <option value="-0.02em">약간 좁게 (-2%)</option>
+            <option value="0em" selected>기본 (0)</option>
+            <option value="0.02em">약간 넓게 (+2%)</option>
+            <option value="0.04em">넓게 (+4%)</option>
+          </select>
+        </div>
+        <!-- 미리보기 샘플 -->
+        <div class="opt-c opt-full">
+          <div id="typo-preview" style="padding:10px 14px;background:#FAFAFA;border:1px solid var(--border);border-radius:7px;font-family:'Noto Serif CJK KR',serif;">
+            <div style="font-size:13px;font-weight:900;color:#1A1A2E;margin-bottom:6px;">타이포그래피 미리보기</div>
+            <p id="typo-sample" style="font-size:10.5pt;line-height:2.0;letter-spacing:0em;text-indent:5mm;color:#2D2D2D;margin:0">
+              네이버 블로그는 소비자가 능동적으로 검색해서 찾아오는 채널이다. 이미 구매 의지가 있는 소비자가 직접 블로그를 찾아온다는 의미다. 따라서 다른 SNS보다 구매 전환율이 압도적으로 높을 수밖에 없다.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 출판 정보 (판권) -->
+    <div class="tc" id="stc-publish" style="padding:14px">
+      <div class="opts">
+        <div class="opt-c">
+          <div class="opt-l">📚 출판사명</div>
+          <input type="text" class="inp" id="pub-publisher" placeholder="AI마케팅전략연구소">
+        </div>
+        <div class="opt-c">
+          <div class="opt-l">👤 펴낸이</div>
+          <input type="text" class="inp" id="pub-publisher-name" placeholder="이재용">
+        </div>
+        <div class="opt-c">
+          <div class="opt-l">📅 발행일</div>
+          <input type="text" class="inp" id="pub-date" placeholder="2025년 4월 1일">
+        </div>
+        <div class="opt-c">
+          <div class="opt-l">🔢 ISBN</div>
+          <input type="text" class="inp" id="pub-isbn" placeholder="979-11-XXXXXX-XX-X" oninput="validateISBN(this)">
+        </div>
+        <div class="opt-c">
+          <div class="opt-l">💰 정가</div>
+          <input type="text" class="inp" id="pub-price" placeholder="15,000원">
+        </div>
+        <div class="opt-c">
+          <div class="opt-l">📞 전화</div>
+          <input type="text" class="inp" id="pub-phone" placeholder="010-0000-0000">
+        </div>
+        <div class="opt-c opt-full">
+          <div class="opt-l">📍 주소</div>
+          <input type="text" class="inp" id="pub-address" placeholder="서울시 ○○구 ○○로 000">
+        </div>
+        <div class="opt-c opt-full">
+          <div class="opt-l">📧 이메일</div>
+          <input type="text" class="inp" id="pub-email" placeholder="contact@example.com">
+        </div>
+        <div class="opt-c opt-full">
+          <div class="opt-l" style="color:#888;font-size:10px">※ 판권 페이지가 전자책 마지막 페이지에 자동 삽입됩니다</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 인쇄 납품 -->
+    <div class="tc" id="stc-print" style="padding:14px">
+      <div class="opts">
+        <div class="opt-c opt-full">
+          <div class="opt-l">📄 판형 선택</div>
+          <select class="inp" id="paper-size" onchange="schedulePreview()">
+            <option value="a4">A4 (210×297mm) — 전자책·강의자료</option>
+            <option value="singguk">신국판 (152×225mm) — 자기계발·에세이</option>
+            <option value="guk">국판 (148×210mm) — 소설·문학</option>
+            <option value="crown">크라운판 (176×248mm) — 교재·전문서</option>
+            <option value="p46">46판 (127×188mm) — 시집·소책자</option>
+          </select>
+        </div>
+        <div class="opt-c opt-full">
+          <div style="background:#F0F9FF;border:1px solid #BAE6FD;border-radius:7px;padding:10px 12px">
+            <div style="font-size:11px;font-weight:700;color:#0369A1;margin-bottom:8px">🖨️ 인쇄 납품용 PDF (재단선 포함)</div>
+            <div style="font-size:11px;color:#555;line-height:1.7;margin-bottom:8px">블리드(3mm) + 재단선(Crop Mark)이 추가된 인쇄소 납품용 PDF를 별도로 생성합니다.</div>
+            <div class="toggle-row">
+              <label style="font-size:12px;font-weight:600;color:#0369A1">재단선 포함 PDF 생성</label>
+              <label class="toggle"><input type="checkbox" id="print-mode"><span class="toggle-slider"></span></label>
+            </div>
+          </div>
+        </div>
+        <div class="opt-c opt-full">
+          <div style="background:#FFFBEA;border:1px solid #FCD34D;border-radius:7px;padding:10px 12px">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+              <div style="font-size:11px;font-weight:700;color:#B45309">🔒 워터마크</div>
+              <label class="toggle"><input type="checkbox" id="watermark-toggle" onchange="toggleWatermark()"><span class="toggle-slider"></span></label>
+            </div>
+            <div id="watermark-area" style="display:none">
+              <input type="text" class="inp" id="watermark-text" placeholder="워터마크 텍스트 (예: 도야교수 | 샘플본)" style="margin-top:6px">
+              <div style="font-size:10px;color:#888;margin-top:4px">※ PDF 전체에 반투명 대각선으로 표시됩니다</div>
+            </div>
+            <div style="font-size:10.5px;color:#888;margin-top:4px">OFF 상태에서는 워터마크 없이 깔끔하게 출력됩니다</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GEN BTN -->
+  <div class="gen-wrap">
+    <button class="gen" id="gen" onclick="generate()">
+      <span id="gen-ic">✨</span>
+      <span id="gen-tx">AI로 전자책 만들기</span>
+    </button>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="prog" id="prog">
+    <div class="steps">
+      <div class="step-item"><div class="sd" id="s1">1</div><span class="step-lbl">원고 분석</span></div>
+      <div class="sl" id="l1"></div>
+      <div class="step-item"><div class="sd" id="s2">2</div><span class="step-lbl">AI 구조화</span></div>
+      <div class="sl" id="l2"></div>
+      <div class="step-item"><div class="sd" id="s3">3</div><span class="step-lbl">이미지 생성</span></div>
+      <div class="sl" id="l3"></div>
+      <div class="step-item"><div class="sd" id="s4">4</div><span class="step-lbl">PDF 렌더링</span></div>
+    </div>
+    <div class="prog-msg" id="prog-msg">잠시 기다려주세요...</div>
+    <div class="pbw"><div class="pb" id="pbar"></div></div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="result" id="result">
+    <div class="rbadge">✅ 전자책 생성 완료</div>
+    <div class="rtitle" id="r-title">-</div>
+    <div class="rmeta">
+      <span>📄 <span id="r-blocks">0</span>개 블록</span>
+      <span>🎨 <span id="r-theme">그린</span></span>
+      <span>📊 차트 <span id="r-charts">0</span>개</span>
+      <span>🏷️ 인포그래픽 표 <span id="r-itables">0</span>개</span>
+    </div>
+    <div class="chips" id="r-chips"></div>
+    <div class="dl-btns">
+      <button class="dl-btn dl-pdf" onclick="downloadPDF()">⬇ PDF 다운로드</button>
+      <button class="dl-btn dl-epub" id="epub-btn" onclick="downloadEPUB()">📱 EPUB 다운로드</button>
+      <button class="dl-btn dl-img" id="img-btn" onclick="downloadWithImages()">🍌 챕터 이미지 포함 PDF</button>
+      <button class="dl-btn dl-print" onclick="downloadPrint()" style="grid-column:1/-1;background:#1E3A5F;color:#fff;font-size:12px;">🖨️ 인쇄 납품용 PDF (재단선·블리드 포함)</button>
+    </div>
+
+    <!-- 블록 편집기 (3단계) -->
+    <div class="editor-section" id="editor-section">
+      <h4>✏️ 블록 직접 편집</h4>
+      <div class="block-list-edit" id="block-edit-list"></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:10px">
+      <button class="sbtn" onclick="toggleEditor()" style="flex:1" id="editor-toggle-btn">✏️ 블록 편집 열기</button>
+      <button class="reset-btn" onclick="resetAll()" style="flex:1">🔄 새로 만들기</button>
+    </div>
+
+    <!-- 2순위 기능 버튼 -->
+    <div style="border-top:1px solid var(--br);margin-top:12px;padding-top:12px;display:flex;flex-direction:column;gap:7px;">
+      <div style="font-size:10px;font-weight:700;color:var(--gr);letter-spacing:.5px;margin-bottom:2px;">✨ 고급 편집 기능</div>
+      <button class="adv-btn" id="tc-btn" onclick="runTrackChanges()">
+        <span>🔍</span>
+        <div><div style="font-weight:700">교정·교열 (변경 추적)</div><div style="font-size:10px;opacity:.8">AI가 맞춤법·문체를 교열하고 변경 내역을 보여줍니다</div></div>
+      </button>
+      <button class="adv-btn" id="fn-btn" onclick="runFootnotes()">
+        <span>📎</span>
+        <div><div style="font-weight:700">각주·참고문헌 처리</div><div style="font-size:10px;opacity:.8">[^1] 마크를 감지해 각주를 자동으로 삽입합니다</div></div>
+      </button>
+      <button class="adv-btn" id="idx-btn" onclick="runGenerateIndex()">
+        <span>📑</span>
+        <div><div style="font-weight:700">색인 자동 생성</div><div style="font-size:10px;opacity:.8">핵심 키워드를 추출해 가나다순 색인 페이지를 만듭니다</div></div>
+      </button>
+    </div>
+  </div>
+
+  <!-- EXAMPLES -->
+  <div class="card">
+    <div class="card-h"><h3>💡 예시로 바로 체험</h3></div>
+    <div class="card-b">
+      <div class="ex-grid">
+        <div class="ex-c" onclick="loadEx('naver')"><div class="ex-ic">📊</div><div class="ex-t">네이버 마케팅</div><div class="ex-d">블로그·파워링크 강의 스크립트</div><div class="ex-tag">마케팅</div></div>
+        <div class="ex-c" onclick="loadEx('coupang')"><div class="ex-ic">🛒</div><div class="ex-t">쿠팡 파트너스</div><div class="ex-d">월 100만원 만드는 유튜브 대본</div><div class="ex-tag">수익화</div></div>
+        <div class="ex-c" onclick="loadEx('threads')"><div class="ex-ic">🧵</div><div class="ex-t">스레드 마케팅</div><div class="ex-d">팔로워 1만 단계별 전략</div><div class="ex-tag">SNS</div></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /left -->
+
+<!-- 우: 미리보기 -->
+<div class="preview-panel">
+  <div class="pv-header">
+    <span>👁 실시간 미리보기</span>
+    <div class="pv-btns">
+      <button class="pv-btn on" id="pvb-preview" onclick="setPvView('preview')">미리보기</button>
+      <button class="pv-btn" id="pvb-json" onclick="setPvView('json')">JSON</button>
+    </div>
+  </div>
+  <div class="pv-area">
+    <div class="pv-placeholder" id="pv-placeholder">
+      <div class="big">📚</div>
+      <p>원고를 입력하고<br>AI 변환을 시작하면<br>미리보기가 표시됩니다</p>
+    </div>
+    <iframe class="pv-iframe" id="pv-iframe" style="display:none"></iframe>
+  </div>
+  <pre class="json-view" id="json-view"></pre>
+  <div class="pv-hint">※ 미리보기와 실제 PDF 레이아웃은 다를 수 있습니다</div>
+</div>
+
+</div><!-- /wrap -->
+
+<!-- 블록 편집 모달 -->
+<div class="modal-overlay" id="edit-modal">
+  <div class="modal">
+    <h3 id="modal-title">블록 편집</h3>
+    <textarea class="inp" id="modal-content" rows="8" style="font-size:13px;line-height:1.7"></textarea>
+    <div class="modal-btns">
+      <button class="mbtn mbtn-cancel" onclick="closeModal()">취소</button>
+      <button class="mbtn mbtn-ok" onclick="saveModal()">저장 + 미리보기 갱신</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="edit-modal">
+  <div class="modal">
+    <h3 id="modal-title">블록 편집</h3>
+    <textarea class="inp" id="modal-content" rows="8" style="font-size:13px;line-height:1.7"></textarea>
+    <div class="modal-btns">
+      <button class="mbtn mbtn-cancel" onclick="closeModal()">취소</button>
+      <button class="mbtn mbtn-ok" onclick="saveModal()">저장 + 미리보기 갱신</button>
+    </div>
+  </div>
+</div>
+
+<!-- 변경 추적 모달 -->
+<div class="modal-overlay" id="tc-modal">
+  <div class="modal" style="max-width:680px;width:95%">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <h3>🔍 교정·교열 변경 추적</h3>
+      <div style="font-size:11px;color:var(--gr)" id="tc-summary"></div>
+    </div>
+    <div id="tc-diff-list" style="max-height:55vh;overflow-y:auto;display:flex;flex-direction:column;gap:8px;"></div>
+    <div class="modal-btns" style="margin-top:12px">
+      <button class="mbtn mbtn-cancel" onclick="document.getElementById('tc-modal').classList.remove('on')">닫기</button>
+      <button class="mbtn" style="background:#1E50A2;color:#fff" onclick="tcSelectAll()">전체 선택</button>
+      <button class="mbtn mbtn-ok" onclick="applyTrackedChanges()">선택 항목 적용</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<style>
+/* 고급 기능 버튼 */
+.adv-btn{width:100%;padding:10px 14px;border-radius:8px;background:var(--ch);color:#fff;border:none;font-size:12.5px;cursor:pointer;font-family:var(--fn);transition:.15s;display:flex;align-items:center;gap:10px;text-align:left}
+.adv-btn:hover:not(:disabled){background:#111}
+.adv-btn:disabled{background:#aaa;cursor:not-allowed}
+.adv-btn span{font-size:20px;flex-shrink:0}
+/* 변경 추적 diff 카드 */
+.diff-card{border-radius:8px;overflow:hidden;border:1px solid var(--br)}
+.diff-card-h{padding:8px 12px;background:var(--bg);border-bottom:1px solid var(--br);display:flex;align-items:center;gap:8px;font-size:11px}
+.diff-tag{padding:2px 7px;border-radius:4px;font-size:10px;font-weight:700}
+.diff-tag-changed{background:#FEF3C7;color:#92400E}
+.diff-tag-ok{background:var(--gl);color:var(--gd)}
+.diff-body{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.diff-orig{padding:10px 12px;background:#FFF8F0;font-size:12px;line-height:1.7;color:#555;border-right:1px solid var(--br)}
+.diff-new{padding:10px 12px;background:#F0FDF4;font-size:12px;line-height:1.7;color:#1A1A2E}
+.diff-label{font-size:9.5px;font-weight:700;margin-bottom:4px}
+.diff-orig .diff-label{color:#92400E}
+.diff-new .diff-label{color:var(--gd)}
+.diff-reasons{padding:6px 12px;background:#F8FAFC;border-top:1px solid var(--br);display:flex;gap:4px;flex-wrap:wrap}
+.diff-reason{padding:1.5px 7px;border-radius:20px;font-size:9.5px;background:#E0F2FE;color:#0369A1;font-weight:600}
+.diff-check{display:flex;align-items:center;gap:5px;padding:8px 12px;border-top:1px solid var(--br);background:white}
+.diff-check input[type=checkbox]{width:16px;height:16px;accent-color:var(--g);cursor:pointer}
+.diff-check label{font-size:11px;font-weight:600;cursor:pointer}
+</style>
+// ── STATE ────────────────────────────────────────────────────
+let theme='green', themeNm='그린', layout='1col';
+let bookData=null;
+let editingBlock=null, editingIdx=-1;
+
+// ── INIT ─────────────────────────────────────────────────────
+(async()=>{
+  try{
+    const r=await fetch('/api/status');
+    const d=await r.json();
+    setBadge('badge-claude', d.claude, 'Claude');
+    setBadge('badge-gemini', d.gemini, 'Gemini');
+    setBadge('badge-supabase', d.supabase, 'DB');
+    if(!d.gemini){
+      document.getElementById('use-images').disabled=true;
+      document.getElementById('img-btn').disabled=true;
+      document.getElementById('img-btn').title='Gemini API 키 없음';
+    }
+    if(!d.epub){
+      document.getElementById('epub-btn').disabled=true;
+    }
+  }catch(e){}
+  // 설정 서브탭 초기화
+  swSet('basic');
+  // 타이포 미리보기 초기화
+  updateTypoPreview();
+  loadHistory();
+})();
+
+function setBadge(id, ok, label){
+  const el=document.getElementById(id);
+  el.textContent=ok?`${label} ✓`:`${label} ✗`;
+  el.className='nbadge '+(ok?'nb-ok':'nb-off');
+}
+
+// ── TABS ─────────────────────────────────────────────────────
+function sw(t){
+  ['text','hist'].forEach(k=>{
+    document.getElementById('tab-'+k).classList.toggle('on',k===t);
+    document.getElementById('tc-'+k).classList.toggle('on',k===t);
+  });
+}
+
+// ── 설정 서브탭 ─────────────────────────────────────────────
+function swSet(t){
+  ['basic','typo','publish','print'].forEach(k=>{
+    const tab=document.getElementById('stab-'+k);
+    const area=document.getElementById('stc-'+k);
+    if(tab) tab.classList.toggle('on',k===t);
+    if(area) area.classList.toggle('on',k===t);
+  });
+}
+
+// ── 타이포그래피 ─────────────────────────────────────────────
+const TYPO_DEFAULTS={
+  business:{font_size:10.5,line_height:2.0,indent:5,letter_spacing:'0em'},
+  novel:   {font_size:10.0,line_height:1.95,indent:4,letter_spacing:'-0.02em'},
+  textbook:{font_size:10.0,line_height:1.85,indent:0,letter_spacing:'0em'},
+  kids:    {font_size:11.5,line_height:2.1, indent:5,letter_spacing:'0.01em'},
+};
+
+function setTypoPreset(preset, el){
+  document.querySelectorAll('.preset-btn').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  const d=TYPO_DEFAULTS[preset];
+  if(!d) return;
+  document.getElementById('font-size').value=d.font_size;
+  document.getElementById('line-height').value=d.line_height;
+  document.getElementById('indent').value=d.indent;
+  document.getElementById('letter-spacing').value=d.letter_spacing;
+  document.getElementById('fs-val').textContent=d.font_size;
+  document.getElementById('lh-val').textContent=d.line_height;
+  document.getElementById('ind-val').textContent=d.indent;
+  updateTypoPreview();
+  if(bookData) schedulePreview();
+}
+
+function updateTypo(){
+  document.getElementById('fs-val').textContent=document.getElementById('font-size').value;
+  document.getElementById('lh-val').textContent=parseFloat(document.getElementById('line-height').value).toFixed(2);
+  document.getElementById('ind-val').textContent=document.getElementById('indent').value;
+  updateTypoPreview();
+  if(bookData) schedulePreview();
+}
+
+function updateTypoPreview(){
+  const sample=document.getElementById('typo-sample');
+  if(!sample) return;
+  sample.style.fontSize=document.getElementById('font-size').value+'pt';
+  sample.style.lineHeight=document.getElementById('line-height').value;
+  sample.style.letterSpacing=document.getElementById('letter-spacing').value;
+  sample.style.textIndent=document.getElementById('indent').value+'mm';
+}
+
+// ── ISBN 유효성 ─────────────────────────────────────────────
+function validateISBN(el){
+  const v=el.value.replace(/-/g,'').trim();
+  if(v.length===0){el.style.borderColor='';return;}
+  if((v.length===10||v.length===13)&&/^\d+$/.test(v)){
+    el.style.borderColor='var(--g)';
+  } else {
+    el.style.borderColor=v.length>6?'#B91C1C':'';
+  }
+}
+
+// ── 워터마크 토글 ───────────────────────────────────────────
+function toggleWatermark(){
+  const on=document.getElementById('watermark-toggle').checked;
+  document.getElementById('watermark-area').style.display=on?'block':'none';
+  if(bookData) schedulePreview();
+}
+
+// ── 맞춤법 교정 ─────────────────────────────────────────────
+async function runSpellcheck(){
+  const ta=document.getElementById('raw-text');
+  const txt=ta.value.trim();
+  if(!txt){toast('원고를 먼저 입력해주세요','terr');return;}
+  if(txt.length<30){toast('내용이 너무 짧습니다','terr');return;}
+  const btn=document.getElementById('spell-btn');
+  btn.disabled=true; btn.innerHTML='<span class="spin">⚙️</span> 교정 중... (Claude가 검토하고 있어요)';
+  try{
+    const res=await fetch('/api/spellcheck',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:txt})});
+    const d=await res.json();
+    if(!d.success) throw new Error(d.error);
+    ta.value=d.corrected;
+    document.getElementById('char-c').textContent=d.corrected.length.toLocaleString()+'자';
+    document.getElementById('spell-result').style.display='block';
+    toast('✅ 맞춤법·문체 교정 완료!','tok');
+    setTimeout(()=>{document.getElementById('spell-result').style.display='none';},4000);
+  }catch(e){
+    toast('교정 오류: '+e.message,'terr');
+  }finally{
+    btn.disabled=false;
+    btn.innerHTML='<span>🔍</span> 원고 교정하기 (구어체→문어체 + 맞춤법)';
+  }
+}
+
+// ── THEME / LAYOUT ───────────────────────────────────────────
+function setTh(t,nm,el){
+  theme=t;themeNm=nm;
+  document.querySelectorAll('.tp').forEach(p=>{p.classList.remove('on');p.style.borderColor='transparent'});
+  el.classList.add('on');el.style.borderColor='#1A1A2E';
+  document.getElementById('r-theme').textContent=nm;
+  if(bookData){bookData.theme=t;schedulePreview();}
+}
+function setLayout(l,el){
+  layout=l;
+  ['lay-1','lay-2'].forEach(id=>document.getElementById(id).classList.remove('on'));
+  el.classList.add('on');
+  if(bookData){bookData.layout=l;schedulePreview();}
+}
+
+// ── GENERATE ─────────────────────────────────────────────────
+async function generate(){
+  const txt=document.getElementById('raw-text').value.trim();
+  if(!txt){toast('원고를 입력해주세요!','terr');return;}
+  if(txt.length<50){toast('최소 50자 이상 입력해주세요','terr');return;}
+
+  document.getElementById('result').classList.remove('on');
+  document.getElementById('prog').classList.add('on');
+  document.getElementById('gen').disabled=true;
+  document.getElementById('gen-ic').innerHTML='<span class="spin">⚙️</span>';
+  document.getElementById('gen-tx').textContent='AI 변환 중...';
+  setStep(1,15,'📖 원고 분석 중... 문단과 주제를 파악하고 있어요');
+
+  try{
+    const res=await fetch('/api/convert',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        text:txt,
+        hint:document.getElementById('opt-hint').value.trim(),
+        book_info:{
+          title:document.getElementById('opt-title').value,
+          author:document.getElementById('opt-author').value||'도야교수',
+        }
+      })
+    });
+    setStep(2,50,'🤖 AI가 챕터·차트·인포그래픽 구조 설계 중...');
+    const d=await res.json();
+    if(!d.success) throw new Error(d.error||'변환 실패');
+
+    bookData={...d.book, theme, layout,
+      author:document.getElementById('opt-author').value||d.book.author||'도야교수'};
+
+    setStep(3,75,'🎨 레이아웃 및 디자인 적용 중...');
+    await schedulePreview();
+    setStep(4,100,'✅ 완료!');
+    setTimeout(()=>{
+      document.getElementById('prog').classList.remove('on');
+      showResult();
+      toast('전자책이 완성됐어요! 🎉','tok');
+    },600);
+  }catch(e){
+    document.getElementById('prog-msg').textContent='❌ '+e.message;
+    toast('오류: '+e.message,'terr');
+  }finally{
+    resetBtn();
+  }
+}
+
+function setStep(n,pct,msg){
+  for(let i=1;i<=4;i++){
+    const d=document.getElementById('s'+i);
+    if(i<n){d.className='sd dn';d.textContent='✓';}
+    else if(i===n){d.className='sd act';d.textContent=i;}
+    else{d.className='sd';d.textContent=i;}
+    if(i<4)document.getElementById('l'+i).className='sl'+(i<n?' dn':'');
+  }
+  document.getElementById('pbar').style.width=pct+'%';
+  if(msg)document.getElementById('prog-msg').textContent=msg;
+}
+
+// ── RESULT ───────────────────────────────────────────────────
+const tcls={part:'cp',chapter:'cc',section:'cs',paragraph:'cn',tip:'ck',warn:'ck',quote:'ck',table:'ck',info_table:'cit',chart:'cch',numlist:'ck',cards:'ck',pagebreak:'cb',prologue:'cc',toc:'cc',subheading:'cs',outro:'cn',title_page:'cc'};
+const tlbl={part:'PART',chapter:'챕터',section:'섹션',paragraph:'본문',tip:'팁박스',warn:'주의박스',quote:'인용구',table:'표',info_table:'인포표',chart:'차트',numlist:'번호리스트',cards:'카드그리드',pagebreak:'페이지나누기',prologue:'프롤로그',toc:'목차',subheading:'소제목',outro:'다음장예고',title_page:'표제지'};
+
+function showResult(){
+  if(!bookData)return;
+  const blocks=bookData.blocks||[];
+  document.getElementById('r-title').textContent=bookData.title||'전자책';
+  document.getElementById('r-blocks').textContent=blocks.length;
+  document.getElementById('r-charts').textContent=blocks.filter(b=>b.type==='chart').length;
+  document.getElementById('r-itables').textContent=blocks.filter(b=>b.type==='info_table').length;
+
+  const chips=document.getElementById('r-chips');
+  chips.innerHTML=blocks.map(b=>`<span class="chip ${tcls[b.type]||'cn'}">${tlbl[b.type]||b.type}</span>`).join('');
+
+  buildBlockEditor(blocks);
+  document.getElementById('result').classList.add('on');
+  document.getElementById('result').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+// ── BLOCK EDITOR (3단계) ─────────────────────────────────────
+function buildBlockEditor(blocks){
+  const list=document.getElementById('block-edit-list');
+  list.innerHTML=blocks.map((b,i)=>{
+    const preview=(b.content||b.sub||'').split('\n')[0].slice(0,30);
+    return `<div class="be-item">
+      <span class="be-tag ${tcls[b.type]||'cn'}">${tlbl[b.type]||b.type}</span>
+      <span class="be-text">${preview||'—'}</span>
+      <button class="be-edit" onclick="openEdit(${i})">편집</button>
+    </div>`;
+  }).join('');
+}
+
+function toggleEditor(){
+  const sec=document.getElementById('editor-section');
+  const btn=document.getElementById('editor-toggle-btn');
+  const on=sec.classList.toggle('on');
+  btn.textContent=on?'✏️ 블록 편집 닫기':'✏️ 블록 편집 열기';
+}
+
+function openEdit(idx){
+  if(!bookData)return;
+  const b=bookData.blocks[idx];
+  editingIdx=idx;
+  document.getElementById('modal-title').textContent=`${tlbl[b.type]||b.type} 편집`;
+  const editableContent = b.type==='table'||b.type==='info_table'||b.type==='chart'
+    ? JSON.stringify(b,null,2)
+    : (b.content||b.sub||b.title||'');
+  document.getElementById('modal-content').value=editableContent;
+  document.getElementById('edit-modal').classList.add('on');
+}
+
+function closeModal(){document.getElementById('edit-modal').classList.remove('on');}
+
+function saveModal(){
+  if(editingIdx<0||!bookData)return;
+  const val=document.getElementById('modal-content').value;
+  const b=bookData.blocks[editingIdx];
+  if(b.type==='table'||b.type==='info_table'||b.type==='chart'){
+    try{bookData.blocks[editingIdx]=JSON.parse(val);}
+    catch(e){toast('JSON 형식 오류: '+e.message,'terr');return;}
+  }else{
+    bookData.blocks[editingIdx]={...b,content:val};
+  }
+  closeModal();
+  buildBlockEditor(bookData.blocks);
+  schedulePreview();
+  toast('블록이 수정됐어요! 미리보기 갱신 중...');
+}
+
+// ── PREVIEW ──────────────────────────────────────────────────
+let pvTimer=null;
+function schedulePreview(){
+  clearTimeout(pvTimer);
+  return new Promise(res=>{pvTimer=setTimeout(async()=>{await doPreview();res();},800);});
+}
+
+async function doPreview(){
+  if(!bookData)return;
+  try{
+    const ps=typeof getPublishSettings==='function'?getPublishSettings():{};
+    const r=await fetch('/api/preview',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...bookData,...ps})});
+    const html=await r.text();
+    const iframe=document.getElementById('pv-iframe');
+    iframe.srcdoc=html;
+    iframe.style.display='block';
+    document.getElementById('pv-placeholder').style.display='none';
+    document.getElementById('json-view').textContent=JSON.stringify({...bookData,...ps},null,2);
+  }catch(e){console.error(e);}
+}
+
+function setPvView(v){
+  document.getElementById('pvb-preview').classList.toggle('on',v==='preview');
+  document.getElementById('pvb-json').classList.toggle('on',v==='json');
+  document.getElementById('pv-iframe').style.display=v==='preview'?'block':'none';
+  document.getElementById('json-view').style.display=v==='json'?'block':'none';
+}
+
+// ── DOWNLOAD ─────────────────────────────────────────────────
+// ── 설정값 수집 헬퍼 ─────────────────────────────────────────
+function getPublishSettings(){
+  return {
+    paper:   document.getElementById('paper-size')?.value || 'a4',
+    typo_preset: document.querySelector('.preset-btn.on')?.dataset?.preset || 'business',
+    font_size:   parseFloat(document.getElementById('font-size')?.value || 10.5),
+    line_height: parseFloat(document.getElementById('line-height')?.value || 2.0),
+    indent:      parseInt(document.getElementById('indent')?.value || 5),
+    letter_spacing: document.getElementById('letter-spacing')?.value || '0em',
+    watermark:   document.getElementById('watermark-toggle')?.checked || false,
+    watermark_text: document.getElementById('watermark-text')?.value || '',
+    print_mode:  document.getElementById('print-mode')?.checked || false,
+    colophon: {
+      publisher:      document.getElementById('pub-publisher')?.value || '',
+      publisher_name: document.getElementById('pub-publisher-name')?.value || '',
+      pub_date:       document.getElementById('pub-date')?.value || '',
+      isbn:           document.getElementById('pub-isbn')?.value || '',
+      price:          document.getElementById('pub-price')?.value || '',
+      phone:          document.getElementById('pub-phone')?.value || '',
+      address:        document.getElementById('pub-address')?.value || '',
+      email:          document.getElementById('pub-email')?.value || '',
+    }
+  };
+}
+
+async function downloadPDF(useImages=false){
+  if(!bookData){toast('전자책을 먼저 생성해주세요','terr');return;}
+  const btn=event?.currentTarget;
+  if(btn){btn.textContent='⏳ 생성 중...';btn.disabled=true;}
+  try{
+    const ps=getPublishSettings();
+    const payload={...bookData,...ps,use_images:useImages,print_mode:false};
+    const r=await fetch('/api/generate-pdf',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    if(!r.ok){const e=await r.json();throw new Error(e.error);}
+    const blob=await r.blob(); const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=url;
+    a.download=(bookData.title||'전자책').replace(/ /g,'_')+'.pdf';
+    a.click();URL.revokeObjectURL(url);
+    toast('PDF 다운로드 시작! 📄','tok');
+  }catch(e){toast('오류: '+e.message,'terr');}
+  finally{if(btn){btn.textContent='⬇ PDF 다운로드';btn.disabled=false;}}
+}
+
+async function downloadPrint(){
+  if(!bookData){toast('전자책을 먼저 생성해주세요','terr');return;}
+  const btn=event?.currentTarget;
+  if(btn){btn.textContent='⏳ 납품용 생성 중...';btn.disabled=true;}
+  try{
+    const ps=getPublishSettings();
+    const payload={...bookData,...ps,use_images:false,print_mode:true};
+    const r=await fetch('/api/generate-pdf',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    if(!r.ok){const e=await r.json();throw new Error(e.error);}
+    const blob=await r.blob(); const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=url;
+    a.download=(bookData.title||'전자책').replace(/ /g,'_')+'_인쇄납품용.pdf';
+    a.click();URL.revokeObjectURL(url);
+    toast('🖨️ 인쇄 납품용 PDF (재단선 포함) 다운로드!','tok');
+  }catch(e){toast('오류: '+e.message,'terr');}
+  finally{if(btn){btn.textContent='🖨️ 인쇄 납품용 PDF';btn.disabled=false;}}
+}
+
+async function downloadEPUB(){
+  if(!bookData){toast('전자책을 먼저 생성해주세요','terr');return;}
+  const btn=event.currentTarget;
+  btn.textContent='⏳ 생성 중...';btn.disabled=true;
+  try{
+    const ps=getPublishSettings();
+    const r=await fetch('/api/generate-epub',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...bookData,...ps})});
+    if(!r.ok){const e=await r.json();throw new Error(e.error);}
+    const blob=await r.blob(); const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=url;
+    a.download=(bookData.title||'전자책').replace(/ /g,'_')+'.epub';
+    a.click();URL.revokeObjectURL(url);
+    toast('EPUB 다운로드 시작! 📱','tok');
+  }catch(e){toast('오류: '+e.message,'terr');}
+  finally{btn.textContent='📱 EPUB 다운로드';btn.disabled=false;}
+}
+
+async function downloadWithImages(){
+  if(!bookData){toast('전자책을 먼저 생성해주세요','terr');return;}
+  const btn=event.currentTarget;
+  btn.textContent='🍌 이미지 생성 중...';btn.disabled=true;
+  try{
+    const ps=getPublishSettings();
+    const payload={...bookData,...ps,use_images:true,print_mode:false};
+    const r=await fetch('/api/generate-pdf',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    if(!r.ok){const e=await r.json();throw new Error(e.error);}
+    const blob=await r.blob(); const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=url;
+    a.download=(bookData.title||'전자책').replace(/ /g,'_')+'_with_images.pdf';
+    a.click();URL.revokeObjectURL(url);
+    toast('이미지 포함 PDF 다운로드! 🍌','tok');
+  }catch(e){toast('오류: '+e.message,'terr');}
+  finally{btn.textContent='🍌 챕터 이미지 포함 PDF';btn.disabled=false;}
+}
+
+// ── HISTORY (3단계) ──────────────────────────────────────────
+async function loadHistory(){
+  try{
+    const r=await fetch('/api/history');
+    const items=await r.json();
+    const list=document.getElementById('hist-list');
+    document.getElementById('hist-loading').style.display='none';
+    if(!items.length){
+      list.innerHTML='<div style="text-align:center;padding:20px;font-size:12px;color:var(--gr);">저장된 전자책이 없습니다</div>';
+      list.classList.add('on');
+      return;
+    }
+    list.innerHTML=items.map(item=>`<div class="hist-item" onclick="loadHistoryItem('${item.id}')">
+      <div class="hist-dot"></div>
+      <div class="hist-info">
+        <div class="hist-title">${item.title}</div>
+        <div class="hist-meta">${item.block_count}블록 · ${item.pdf_size_kb}KB · ${new Date(item.created_at).toLocaleDateString('ko')}</div>
+      </div>
+    </div>`).join('');
+    list.classList.add('on');
+  }catch(e){
+    document.getElementById('hist-loading').textContent='히스토리를 불러올 수 없습니다';
+  }
+}
+
+async function loadHistoryItem(id){
+  try{
+    const r=await fetch(`/api/history/${id}`);
+    const item=await r.json();
+    bookData=item.book_json;
+    showResult();
+    await doPreview();
+    sw('text');
+    toast('히스토리에서 불러왔어요!','tok');
+  }catch(e){toast('불러오기 실패: '+e.message,'terr');}
+}
+
+// ── RESET ────────────────────────────────────────────────────
+// ── 교정·교열 변경 추적 ─────────────────────────────────────
+let tcDiffs = [];
+
+async function runTrackChanges(){
+  if(!bookData){toast('전자책을 먼저 생성해주세요','terr');return;}
+  const btn=document.getElementById('tc-btn');
+  btn.disabled=true;
+  btn.querySelector('div div:first-child').textContent='분석 중...';
+  try{
+    const r=await fetch('/api/track-changes',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({blocks:bookData.blocks})
+    });
+    const d=await r.json();
+    if(!d.success) throw new Error(d.error);
+    tcDiffs=d.diffs||[];
+    showTrackChangesModal(tcDiffs, d.changed_count, d.total);
+    toast(`교열 완료 — ${d.changed_count}개 수정사항 발견`,'tok');
+  }catch(e){toast('교열 오류: '+e.message,'terr');}
+  finally{
+    btn.disabled=false;
+    btn.querySelector('div div:first-child').textContent='교정·교열 (변경 추적)';
+  }
+}
+
+function showTrackChangesModal(diffs, changedCount, total){
+  document.getElementById('tc-summary').textContent=
+    `전체 ${total}개 블록 검토 · ${changedCount}개 수정사항`;
+
+  const list=document.getElementById('tc-diff-list');
+  list.innerHTML=diffs.map((d,i)=>{
+    if(!d.changed) return `
+      <div class="diff-card" style="opacity:.55">
+        <div class="diff-card-h">
+          <span class="diff-tag diff-tag-ok">✓ 수정없음</span>
+          <span style="color:var(--gr)">${(d.original||'').slice(0,50)}...</span>
+        </div>
+      </div>`;
+
+    const reasons=d.reasons||[];
+    return `
+      <div class="diff-card">
+        <div class="diff-card-h">
+          <span class="diff-tag diff-tag-changed">수정됨</span>
+          <span style="color:var(--md);font-size:11px;">${getTypeLbl(d.type||'paragraph')}</span>
+        </div>
+        <div class="diff-body">
+          <div class="diff-orig">
+            <div class="diff-label">✗ 원본</div>
+            <div>${(d.original||'').replace(/\n/g,'<br>').slice(0,300)}</div>
+          </div>
+          <div class="diff-new">
+            <div class="diff-label">✓ 교정본</div>
+            <div>${(d.corrected||'').replace(/\n/g,'<br>').slice(0,300)}</div>
+          </div>
+        </div>
+        ${reasons.length?`<div class="diff-reasons">${reasons.map(r=>`<span class="diff-reason">${r}</span>`).join('')}</div>`:''}
+        <div class="diff-check">
+          <input type="checkbox" id="tc-chk-${i}" checked>
+          <label for="tc-chk-${i}">이 변경사항 적용하기</label>
+        </div>
+      </div>`;
+  }).join('');
+
+  document.getElementById('tc-modal').classList.add('on');
+}
+
+function tcSelectAll(){
+  document.querySelectorAll('[id^="tc-chk-"]').forEach(cb=>cb.checked=true);
+}
+
+async function applyTrackedChanges(){
+  if(!bookData||!tcDiffs.length) return;
+  const approved=[];
+  tcDiffs.forEach((d,i)=>{
+    const cb=document.getElementById('tc-chk-'+i);
+    if(cb&&cb.checked&&d.changed){
+      approved.push({block_idx:d.block_idx, corrected:d.corrected});
+    }
+  });
+  if(!approved.length){toast('선택된 항목이 없습니다','terr');return;}
+  try{
+    const r=await fetch('/api/apply-changes',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({blocks:bookData.blocks, approved})
+    });
+    const data=await r.json();
+    if(!data.success) throw new Error(data.error);
+    bookData.blocks=data.blocks;
+    buildBlockEditor(bookData.blocks);
+    schedulePreview();
+    document.getElementById('tc-modal').classList.remove('on');
+    toast(`${approved.length}개 변경사항 적용 완료! ✅`,'tok');
+  }catch(e){toast('적용 오류: '+e.message,'terr');}
+}
+
+// ── 각주·참고문헌 ─────────────────────────────────────────────
+async function runFootnotes(){
+  if(!bookData){toast('전자책을 먼저 생성해주세요','terr');return;}
+  const hasFn = bookData.blocks.some(b=>{
+    const c=b.get?b.get('content',''):b.content||'';
+    return /\[\^\d+\]/.test(c);
+  });
+
+  // [^n] 패턴 직접 검사
+  const hasMark = bookData.blocks.some(b=>(b.content||'').includes('[^'));
+  if(!hasMark){
+    toast('원고에 각주 마크([^1], [^2]...)가 없어요. 본문에 [^1] 형식으로 삽입하세요.','terr');
+    return;
+  }
+
+  const btn=document.getElementById('fn-btn');
+  btn.disabled=true;
+  btn.querySelector('div div:first-child').textContent='처리 중...';
+  try{
+    const r=await fetch('/api/process-footnotes',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({blocks:bookData.blocks})
+    });
+    const d=await r.json();
+    if(!d.success) throw new Error(d.error);
+    bookData.blocks=d.blocks;
+    buildBlockEditor(bookData.blocks);
+    schedulePreview();
+    toast(`각주 ${d.footnote_count}개 처리 완료! PDF에 자동 삽입됩니다 📎`,'tok');
+  }catch(e){toast('각주 처리 오류: '+e.message,'terr');}
+  finally{
+    btn.disabled=false;
+    btn.querySelector('div div:first-child').textContent='각주·참고문헌 처리';
+  }
+}
+
+// ── 색인 자동 생성 ─────────────────────────────────────────────
+async function runGenerateIndex(){
+  if(!bookData){toast('전자책을 먼저 생성해주세요','terr');return;}
+  const btn=document.getElementById('idx-btn');
+  btn.disabled=true;
+  btn.querySelector('div div:first-child').textContent='색인 생성 중... (잠깐 걸려요)';
+  try{
+    const r=await fetch('/api/generate-index',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({blocks:bookData.blocks})
+    });
+    const d=await r.json();
+    if(!d.success) throw new Error(d.error);
+
+    // 기존 색인 블록 제거 후 마지막에 추가
+    bookData.blocks=bookData.blocks.filter(b=>b.type!=='index');
+    bookData.blocks.push(d.index_block);
+
+    buildBlockEditor(bookData.blocks);
+    schedulePreview();
+
+    // 결과 칩 업데이트
+    const chips=document.getElementById('r-chips');
+    if(chips){
+      const span=document.createElement('span');
+      span.className='chip';
+      span.style.background='#F0FDF4';
+      span.style.color='#15803D';
+      span.textContent='색인';
+      chips.appendChild(span);
+    }
+    toast(`색인 생성 완료! ${d.keyword_count}개 키워드 추출 📑`,'tok');
+  }catch(e){toast('색인 생성 오류: '+e.message,'terr');}
+  finally{
+    btn.disabled=false;
+    btn.querySelector('div div:first-child').textContent='색인 자동 생성';
+  }
+}
+
+// 타입 레이블 헬퍼
+function getTypeLbl(type){
+  const m={paragraph:'본문',tip:'팁박스',warn:'주의박스',quote:'인용구',prologue:'프롤로그',subheading:'소제목'};
+  return m[type]||type;
+}
+
+function resetAll(){
+  bookData=null;
+  document.getElementById('result').classList.remove('on');
+  document.getElementById('prog').classList.remove('on');
+  document.getElementById('pv-iframe').style.display='none';
+  document.getElementById('pv-placeholder').style.display='flex';
+  document.getElementById('raw-text').scrollIntoView({behavior:'smooth'});
+}
+
+function resetBtn(){
+  document.getElementById('gen').disabled=false;
+  document.getElementById('gen-ic').textContent='✨';
+  document.getElementById('gen-tx').textContent='AI로 전자책 만들기';
+}
+
+// ── EXAMPLES ─────────────────────────────────────────────────
+const EX={
+  naver:`안녕하세요, 오늘은 네이버 마케팅 완전정복 강의를 시작하겠습니다.
+
+네이버는 대한민국에서 가장 많이 사용되는 검색엔진입니다. 소상공인이라면 반드시 활용해야 할 마케팅 채널이죠.
+
+오늘 배울 내용은 총 3가지입니다. 첫 번째로 네이버 블로그 최적화 전략, 두 번째로 스마트플레이스 상위 노출 방법, 세 번째로 파워링크 광고 활용법입니다.
+
+네이버 블로그 지수를 높이려면 몇 가지 중요한 포인트가 있습니다. 첫 번째로 키워드 전략입니다. 소비자가 검색할 만한 키워드를 찾아서 제목과 본문에 자연스럽게 삽입해야 합니다. 두 번째로 꾸준한 포스팅입니다. 일주일에 최소 3~4회 이상 포스팅해야 블로그 지수가 올라갑니다.
+
+파워링크는 네이버 검색 광고의 핵심입니다. 소상공인 고효율기기 지원사업을 활용하면 광고비를 최대 100만원까지 지원받을 수 있습니다.
+
+주요 채널별 마케팅 효과를 비교하면, 네이버 블로그의 구매 전환율은 5점 만점에 5점, 인스타그램은 3점, 유튜브는 3점입니다. 콘텐츠 수명은 블로그가 반영구적인 반면 인스타는 1~2주에 불과합니다.`,
+
+  coupang:`오늘은 쿠팡 파트너스로 월 100만원 만드는 현실적인 방법을 알려드리겠습니다.
+
+저는 처음 쿠팡 파트너스를 시작했을 때 한 달에 만원도 못 벌었습니다. 하지만 6개월 뒤 지금은 매달 꾸준히 수익을 내고 있습니다.
+
+카테고리별 수수료율을 보면 식품이 4.5%로 가장 높고, 생활용품 3.5%, 패션 3.0%, 전자제품 1.5% 순입니다. 따라서 식품과 생활용품 위주로 콘텐츠를 작성하는 것이 유리합니다.
+
+월별 수익 성장을 보면 1개월차 5천원, 2개월차 3만원, 3개월차 12만원, 4개월차 34만원, 5개월차 67만원, 6개월차 120만원으로 성장했습니다.
+
+핵심은 구매 의향이 높은 키워드를 공략하는 것입니다. 에어프라이어 추천보다 에어프라이어 추천 가성비 4인 가족처럼 구체적인 키워드가 효과적입니다.`,
+
+  threads:`스레드로 팔로워 1만명 만들고 월 수익을 올리는 방법을 공유합니다.
+
+스레드의 알고리즘 원리부터 이해해야 합니다. 스레드는 답글과 리포스트를 좋아합니다.
+
+포스팅 시간대별 평균 조회수를 보면, 오전 7-9시가 2400뷰로 가장 높고, 오후 12-1시 1800뷰, 오후 9-11시 2100뷰입니다. 오후 2-5시는 600뷰로 가장 낮습니다.
+
+콘텐츠 유형별 공유율은 문제해결형 42%, 스토리텔링형 31%, 정보제공형 18%, 일상형 9%입니다.
+
+수익화 방법별 월 수익은 전자책 판매 평균 45만원, 강의 판매 120만원, 컨설팅 200만원, 제품 홍보 30만원입니다.`
+};
+
+function loadEx(k){
+  document.getElementById('raw-text').value=EX[k];
+  document.getElementById('char-c').textContent=EX[k].length.toLocaleString()+'자';
+  sw('text');
+  toast('예시 원고 불러옴! 아래 버튼을 눌러보세요 📚');
+}
+
+// ── TOAST ────────────────────────────────────────────────────
+function toast(msg,t=''){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.className='toast '+(t||'');
+  void el.offsetWidth;el.classList.add('on');
+  setTimeout(()=>el.classList.remove('on'),3000);
+}
+</script>
+</body>
+</html>
