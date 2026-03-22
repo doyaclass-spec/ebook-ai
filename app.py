@@ -126,7 +126,7 @@ body{{font-family:'Noto Serif KR','Noto Serif CJK KR',serif;font-size:{fs}pt;lin
 .ch-wrap{{margin-top:14mm;margin-bottom:10mm;}}
 .ch-num{{font-family:'Noto Sans KR';font-size:8pt;font-weight:700;color:{m};letter-spacing:2.5pt;margin-bottom:3mm;text-transform:uppercase;string-set:ct content();}}
 .ch-title{{font-family:'Noto Sans KR';font-size:18pt;font-weight:900;color:#1E1E2E;line-height:1.45;margin-bottom:6mm;}}
-.ch-wrap+p::first-letter{{font-family:'Noto Serif KR';font-size:32pt;font-weight:700;color:{m};float:left;line-height:0.8;margin-right:2mm;margin-top:2mm;}}
+
 .sec-num{{font-family:'Noto Sans KR';font-size:8pt;font-weight:700;color:{m};letter-spacing:1.5pt;margin-top:10mm;margin-bottom:2mm;}}
 .sec-title{{font-family:'Noto Sans KR';font-size:14pt;font-weight:900;color:#1E1E2E;line-height:1.5;margin-bottom:3mm;}}
 .sec-line{{height:.8pt;background:{m};margin-bottom:6mm;width:40mm;}}
