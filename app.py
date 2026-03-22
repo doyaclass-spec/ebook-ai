@@ -66,7 +66,7 @@ def get_css(t, paper='a4', layout='1col', typo=None, print_mode=False, watermark
     wm = ''
     if watermark and watermark_text:
         wt = watermark_text.replace("'","\\'")
-        wm = f"""body::after{{content:'{wt}';position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-35deg);font-family:'BookUI',sans-serif;font-size:42pt;font-weight:900;color:rgba(0,0,0,0.06);white-space:nowrap;pointer-events:none;z-index:9999;letter-spacing:4pt;}}"""
+        wm = f"""body::after{{content:'{wt}';position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-35deg);font-family:'Noto Sans KR',sans-serif;font-size:42pt;font-weight:900;color:rgba(0,0,0,0.06);white-space:nowrap;pointer-events:none;z-index:9999;letter-spacing:4pt;}}"""
 
     col = "".join([
         ".two-col{column-count:2;column-gap:8mm;column-rule:0.5pt solid #DDD;}",
@@ -81,37 +81,32 @@ def get_css(t, paper='a4', layout='1col', typo=None, print_mode=False, watermark
     ml2 = t['light']; pal = t['pale']; acc = t['accent']
 
     return f"""
-@font-face{{font-family:'BookBody';src:local('Noto Serif CJK KR');font-weight:400;}}
-@font-face{{font-family:'BookBody';src:local('Noto Serif CJK KR SemiBold');font-weight:600;}}
-@font-face{{font-family:'BookBody';src:local('Noto Serif CJK KR Bold');font-weight:700;}}
-@font-face{{font-family:'BookUI';src:local('Noto Sans CJK KR');font-weight:400;}}
-@font-face{{font-family:'BookUI';src:local('Noto Sans CJK KR Bold');font-weight:700;}}
-@font-face{{font-family:'BookUI';src:local('Noto Sans CJK KR Black');font-weight:900;}}
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=Noto+Serif+KR:wght@400;600;700&display=swap');
 @page{{size:{pw}mm {ph}mm;margin:{ps['mt']+bl}mm {ps['mr']+bl}mm {ps['mb']+bl}mm {ps['ml']+bl}mm;
-  @top-left{{content:string(bt);font-family:'BookUI';font-size:8pt;color:{m};font-weight:700;vertical-align:bottom;padding-bottom:4mm;border-bottom:1.8pt solid {m};}}
-  @top-right{{content:string(ct);font-family:'BookUI';font-size:8pt;color:#888;vertical-align:bottom;padding-bottom:4mm;border-bottom:.4pt solid #CCC;}}
-  @bottom-center{{content:counter(page);font-family:'BookUI';font-size:9pt;font-weight:700;color:#FFF;background:{m};border-radius:50%;width:6mm;height:6mm;text-align:center;vertical-align:middle;padding-top:1.2mm;}}
+  @top-left{{content:string(bt);font-family:'Noto Sans KR';font-size:8pt;color:{m};font-weight:700;vertical-align:bottom;padding-bottom:4mm;border-bottom:1.8pt solid {m};}}
+  @top-right{{content:string(ct);font-family:'Noto Sans KR';font-size:8pt;color:#888;vertical-align:bottom;padding-bottom:4mm;border-bottom:.4pt solid #CCC;}}
+  @bottom-center{{content:counter(page);font-family:'Noto Sans KR';font-size:9pt;font-weight:700;color:#FFF;background:{m};border-radius:50%;width:6mm;height:6mm;text-align:center;vertical-align:middle;padding-top:1.2mm;}}
 }}
 @page:left{{margin-left:{ps['ml']+bl+5}mm;margin-right:{ps['mr']+bl}mm;@top-right{{content:none;border:none;}}}}
 @page:right{{margin-left:{ps['ml']+bl}mm;margin-right:{ps['mr']+bl+5}mm;@top-left{{content:none;border:none;}}}}
 *{{box-sizing:border-box;margin:0;padding:0;}}
-body{{font-family:'BookBody','Noto Serif CJK KR',serif;font-size:{fs}pt;line-height:{lh};letter-spacing:{ls};color:#2D2D2D;word-break:keep-all;overflow-wrap:break-word;text-align:justify;word-spacing:-0.05em;}}
+body{{font-family:'Noto Serif KR','Noto Serif CJK KR',serif;font-size:{fs}pt;line-height:{lh};letter-spacing:{ls};color:#2D2D2D;word-break:keep-all;overflow-wrap:break-word;text-align:justify;word-spacing:-0.05em;}}
 {wm}
 .pb{{page-break-after:always;}}.keep{{page-break-inside:avoid;}}
 .btr{{string-set:bt content();display:none;}}
 /* 판권 */
 .colophon{{page-break-before:always;min-height:200mm;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:10mm;}}
 .colophon-rule{{height:0.5pt;background:#CCC;margin-bottom:8mm;}}
-.colophon-title{{font-family:'BookUI';font-size:14pt;font-weight:900;color:#1E1E2E;margin-bottom:2mm;}}
-.colophon-sub{{font-family:'BookUI';font-size:9pt;color:#888;margin-bottom:6mm;}}
-.colophon-tbl{{width:100%;font-family:'BookUI';font-size:9pt;border-collapse:collapse;}}
+.colophon-title{{font-family:'Noto Sans KR';font-size:14pt;font-weight:900;color:#1E1E2E;margin-bottom:2mm;}}
+.colophon-sub{{font-family:'Noto Sans KR';font-size:9pt;color:#888;margin-bottom:6mm;}}
+.colophon-tbl{{width:100%;font-family:'Noto Sans KR';font-size:9pt;border-collapse:collapse;}}
 .colophon-tbl td{{padding:1.5mm 0;vertical-align:top;}}
 .colophon-tbl td:first-child{{width:26mm;color:#888;}}
-.colophon-copy{{font-family:'BookUI';font-size:8pt;color:#aaa;margin-top:6mm;border-top:0.5pt solid #EEE;padding-top:4mm;line-height:1.7;}}
+.colophon-copy{{font-family:'Noto Sans KR';font-size:8pt;color:#aaa;margin-top:6mm;border-top:0.5pt solid #EEE;padding-top:4mm;line-height:1.7;}}
 /* 헤더/섹션 */
 .ptitle-reg{{string-set:bt content();display:none;}}
-.prologue-title{{font-family:'BookUI';font-size:22pt;font-weight:900;color:{md};margin-top:10mm;margin-bottom:2mm;string-set:ct "프롤로그";}}
-.author-line{{font-family:'BookUI';font-size:11pt;color:#555;text-align:right;margin-top:8mm;}}
+.prologue-title{{font-family:'Noto Sans KR';font-size:22pt;font-weight:900;color:{md};margin-top:10mm;margin-bottom:2mm;string-set:ct "프롤로그";}}
+.author-line{{font-family:'Noto Sans KR';font-size:11pt;color:#555;text-align:right;margin-top:8mm;}}
 .dual-line{{height:6pt;margin-bottom:6mm;position:relative;}}
 .dual-line::before{{content:'';position:absolute;top:0;left:0;right:0;height:2.5pt;background:{m};}}
 .dual-line::after{{content:'';position:absolute;bottom:0;left:0;right:0;height:.6pt;background:#CCC;}}
@@ -121,39 +116,39 @@ body{{font-family:'BookBody','Noto Serif CJK KR',serif;font-size:{fs}pt;line-hei
 .pd2{{position:absolute;right:10mm;bottom:-20mm;width:90mm;height:90mm;border-radius:50%;background:rgba(255,255,255,.04);}}
 .pd3{{position:absolute;right:0;top:0;bottom:0;width:35%;background:{m};border-radius:0 6pt 6pt 0;}}
 .pd4{{position:absolute;right:35%;top:0;bottom:0;width:5mm;background:{mp};}}
-.pbn{{position:absolute;right:4%;bottom:5mm;font-family:'BookUI';font-size:72pt;font-weight:900;color:rgba(255,255,255,.18);line-height:1;}}
-.plbl{{font-family:'BookUI';font-size:9.5pt;font-weight:700;color:{acc};letter-spacing:2pt;margin-bottom:3mm;position:relative;z-index:2;}}
+.pbn{{position:absolute;right:4%;bottom:5mm;font-family:'Noto Sans KR';font-size:72pt;font-weight:900;color:rgba(255,255,255,.18);line-height:1;}}
+.plbl{{font-family:'Noto Sans KR';font-size:9.5pt;font-weight:700;color:{acc};letter-spacing:2pt;margin-bottom:3mm;position:relative;z-index:2;}}
 .psep{{height:.5pt;background:rgba(255,255,255,.25);margin-bottom:5mm;width:60%;position:relative;z-index:2;}}
-.ptitle{{font-family:'BookUI';font-size:20pt;font-weight:900;color:#FFF;line-height:1.5;position:relative;z-index:2;width:58%;}}
-.psub{{font-family:'BookUI';font-size:9.5pt;color:rgba(170,220,190,.9);margin-top:5mm;position:relative;z-index:2;}}
+.ptitle{{font-family:'Noto Sans KR';font-size:20pt;font-weight:900;color:#FFF;line-height:1.5;position:relative;z-index:2;width:58%;}}
+.psub{{font-family:'Noto Sans KR';font-size:9.5pt;color:rgba(170,220,190,.9);margin-top:5mm;position:relative;z-index:2;}}
 .pintro{{margin-top:8mm;font-size:{fs}pt;color:#555;line-height:{lh};}}
 .chapter-img{{width:100%;max-height:55mm;object-fit:cover;border-radius:4pt;margin-bottom:6mm;display:block;}}
 .ch-wrap{{margin-top:8mm;margin-bottom:8mm;}}
-.ch-num{{font-family:'BookUI';font-size:8.5pt;font-weight:700;color:{m};letter-spacing:1.5pt;margin-bottom:1.5mm;string-set:ct content();}}
-.ch-title{{font-family:'BookUI';font-size:18pt;font-weight:900;color:#1E1E2E;line-height:1.45;margin-bottom:4mm;}}
-.sec-num{{font-family:'BookUI';font-size:8pt;font-weight:700;color:{m};letter-spacing:1pt;margin-top:8mm;margin-bottom:1.5mm;}}
-.sec-title{{font-family:'BookUI';font-size:14.5pt;font-weight:900;color:#1E1E2E;line-height:1.5;margin-bottom:2mm;}}
+.ch-num{{font-family:'Noto Sans KR';font-size:8.5pt;font-weight:700;color:{m};letter-spacing:1.5pt;margin-bottom:1.5mm;string-set:ct content();}}
+.ch-title{{font-family:'Noto Sans KR';font-size:18pt;font-weight:900;color:#1E1E2E;line-height:1.45;margin-bottom:4mm;}}
+.sec-num{{font-family:'Noto Sans KR';font-size:8pt;font-weight:700;color:{m};letter-spacing:1pt;margin-top:8mm;margin-bottom:1.5mm;}}
+.sec-title{{font-family:'Noto Sans KR';font-size:14.5pt;font-weight:900;color:#1E1E2E;line-height:1.5;margin-bottom:2mm;}}
 .sec-line{{height:.6pt;background:{ml2};margin-bottom:5mm;}}
-.sub-h{{font-family:'BookUI';font-size:11pt;font-weight:700;color:{md};margin-top:7mm;margin-bottom:3mm;}}
+.sub-h{{font-family:'Noto Sans KR';font-size:11pt;font-weight:700;color:{md};margin-top:7mm;margin-bottom:3mm;}}
 p{{margin-bottom:3.5mm;text-indent:{ind}mm;}}p.ni{{text-indent:0;}}
 .tip{{margin:5mm 0;border-radius:5pt;overflow:hidden;page-break-inside:avoid;}}
-.tip-h{{background:{m};padding:2.5mm 5mm;font-family:'BookUI';font-size:10pt;font-weight:700;color:#FFF;}}
+.tip-h{{background:{m};padding:2.5mm 5mm;font-family:'Noto Sans KR';font-size:10pt;font-weight:700;color:#FFF;}}
 .tip-b{{background:{ml2};padding:4mm 5mm;}}
-.tip-b p{{text-indent:0;font-family:'BookUI';font-size:10pt;line-height:1.8;color:#2D2D2D;margin-bottom:1.5mm;}}
+.tip-b p{{text-indent:0;font-family:'Noto Sans KR';font-size:10pt;line-height:1.8;color:#2D2D2D;margin-bottom:1.5mm;}}
 .warn{{background:#FFFBEA;border:1.5pt solid #D4A017;border-radius:5pt;padding:4mm 5mm;margin:5mm 0;page-break-inside:avoid;}}
-.warn-h{{font-family:'BookUI';font-size:10pt;font-weight:700;color:#D4A017;margin-bottom:2mm;}}
-.warn p{{text-indent:0;font-family:'BookUI';font-size:9.5pt;line-height:1.8;margin-bottom:1mm;}}
+.warn-h{{font-family:'Noto Sans KR';font-size:10pt;font-weight:700;color:#D4A017;margin-bottom:2mm;}}
+.warn p{{text-indent:0;font-family:'Noto Sans KR';font-size:9.5pt;line-height:1.8;margin-bottom:1mm;}}
 .quote{{border-left:3.5pt solid {m};padding:4mm 6mm;margin:6mm 0;background:{pal};page-break-inside:avoid;}}
-.quote p{{text-indent:0;font-family:'BookBody';font-size:12pt;font-weight:600;color:{md};line-height:1.8;margin:0;}}
+.quote p{{text-indent:0;font-family:'Noto Serif KR';font-size:12pt;font-weight:600;color:{md};line-height:1.8;margin:0;}}
 .tbl-wrap{{margin:5mm 0;page-break-inside:avoid;}}
-.tbl-cap{{font-family:'BookUI';font-size:8.5pt;color:#888;text-align:center;margin-top:1.5mm;}}
-table{{width:100%;border-collapse:collapse;font-family:'BookUI';font-size:9pt;}}
+.tbl-cap{{font-family:'Noto Sans KR';font-size:8.5pt;color:#888;text-align:center;margin-top:1.5mm;}}
+table{{width:100%;border-collapse:collapse;font-family:'Noto Sans KR';font-size:9pt;}}
 thead tr{{background:{m};color:#FFF;}}
 thead th{{padding:3mm;text-align:center;font-weight:700;border-bottom:2pt solid {md};}}
 tbody tr:nth-child(odd){{background:#FFF;}}tbody tr:nth-child(even){{background:{pal};}}
 tbody td{{padding:2.5mm 3mm;border-bottom:.4pt solid #DDD;text-align:center;vertical-align:middle;}}
 td.tl{{text-align:left;}}td.tb{{font-weight:700;color:{md};}}tr.hl td{{background:#D4EDDA!important;font-weight:700;color:{md};}}
-.info-table{{width:100%;border-collapse:collapse;font-family:'BookUI';font-size:9pt;margin:5mm 0;page-break-inside:avoid;}}
+.info-table{{width:100%;border-collapse:collapse;font-family:'Noto Sans KR';font-size:9pt;margin:5mm 0;page-break-inside:avoid;}}
 .info-table thead tr{{background:{m};color:#FFF;}}
 .info-table thead th{{padding:3mm 4mm;text-align:left;font-weight:700;}}
 .info-table tbody tr{{border-bottom:1pt solid {ml2};}}
@@ -165,44 +160,44 @@ td.tl{{text-align:left;}}td.tb{{font-weight:700;color:{md};}}tr.hl td{{backgroun
 .prog-bar-wrap{{width:100%;background:#E5E7EB;border-radius:10pt;height:4mm;}}
 .prog-bar{{height:4mm;border-radius:10pt;background:{m};}}
 .chart-wrap{{margin:5mm 0;page-break-inside:avoid;text-align:center;}}
-.chart-cap{{font-family:'BookUI';font-size:8.5pt;color:#888;margin-top:2mm;}}
+.chart-cap{{font-family:'Noto Sans KR';font-size:8.5pt;color:#888;margin-top:2mm;}}
 .numlist{{list-style:none;margin:4mm 0;}}
 .numlist li{{display:flex;align-items:flex-start;margin-bottom:3mm;}}
-.nc{{display:inline-flex;align-items:center;justify-content:center;width:6mm;height:6mm;min-width:6mm;border-radius:50%;background:{m};color:#FFF;font-family:'BookUI';font-size:8pt;font-weight:700;margin-right:3mm;margin-top:1.5mm;}}
-.numlist li .tx{{font-family:'BookBody';font-size:{fs}pt;line-height:{lh};color:#2D2D2D;}}
+.nc{{display:inline-flex;align-items:center;justify-content:center;width:6mm;height:6mm;min-width:6mm;border-radius:50%;background:{m};color:#FFF;font-family:'Noto Sans KR';font-size:8pt;font-weight:700;margin-right:3mm;margin-top:1.5mm;}}
+.numlist li .tx{{font-family:'Noto Serif KR';font-size:{fs}pt;line-height:{lh};color:#2D2D2D;}}
 .cards{{display:flex;gap:3mm;margin:5mm 0;}}
 .card{{flex:1;border:.5pt solid {ml2};border-radius:5pt;overflow:hidden;page-break-inside:avoid;}}
 .card-top{{background:{pal};border-bottom:1.5pt solid {m};padding:3mm 2mm;text-align:center;}}
-.card-num{{font-family:'BookUI';font-size:16pt;font-weight:900;color:{m};line-height:1;margin-bottom:1mm;}}
-.card-ttl{{font-family:'BookUI';font-size:9pt;font-weight:700;color:{md};line-height:1.4;}}
-.card-body{{padding:3mm 2mm;text-align:center;font-family:'BookUI';font-size:8.5pt;color:#555;line-height:1.6;}}
+.card-num{{font-family:'Noto Sans KR';font-size:16pt;font-weight:900;color:{m};line-height:1;margin-bottom:1mm;}}
+.card-ttl{{font-family:'Noto Sans KR';font-size:9pt;font-weight:700;color:{md};line-height:1.4;}}
+.card-body{{padding:3mm 2mm;text-align:center;font-family:'Noto Sans KR';font-size:8.5pt;color:#555;line-height:1.6;}}
 .outro{{margin-top:12mm;display:flex;align-items:center;background:{pal};border-radius:4pt;overflow:hidden;}}
-.outro-lbl{{background:{m};padding:2.5mm 4mm;font-family:'BookUI';font-size:8.5pt;font-weight:700;color:#FFF;white-space:nowrap;}}
-.outro-tx{{padding:2.5mm 4mm;font-family:'BookUI';font-size:9.5pt;color:#2D2D2D;}}
-.toc-title{{font-family:'BookUI';font-size:22pt;font-weight:900;color:{md};margin-top:8mm;margin-bottom:2mm;string-set:ct "목차";}}
+.outro-lbl{{background:{m};padding:2.5mm 4mm;font-family:'Noto Sans KR';font-size:8.5pt;font-weight:700;color:#FFF;white-space:nowrap;}}
+.outro-tx{{padding:2.5mm 4mm;font-family:'Noto Sans KR';font-size:9.5pt;color:#2D2D2D;}}
+.toc-title{{font-family:'Noto Sans KR';font-size:22pt;font-weight:900;color:{md};margin-top:8mm;margin-bottom:2mm;string-set:ct "목차";}}
 .toc-part{{display:flex;align-items:center;margin-top:5mm;margin-bottom:2mm;padding:3mm;background:{pal};border-left:3pt solid {m};}}
-.toc-part .tt{{font-family:'BookUI';font-size:10.5pt;font-weight:700;color:{md};flex:1;}}
+.toc-part .tt{{font-family:'Noto Sans KR';font-size:10.5pt;font-weight:700;color:{md};flex:1;}}
 .toc-ch{{display:flex;align-items:baseline;margin:2.5mm 0 .5mm;}}
-.toc-ch .tt{{font-family:'BookUI';font-size:10pt;font-weight:700;color:#1E1E2E;flex:1;}}
+.toc-ch .tt{{font-family:'Noto Sans KR';font-size:10pt;font-weight:700;color:#1E1E2E;flex:1;}}
 .toc-sec{{display:flex;align-items:baseline;margin:1mm 0;padding-left:8mm;}}
-.toc-sec .tt{{font-family:'BookUI';font-size:9.5pt;color:#555;flex:1;}}
+.toc-sec .tt{{font-family:'Noto Sans KR';font-size:9.5pt;color:#555;flex:1;}}
 .toc-dots{{flex:1;border-bottom:.5pt dotted #CCC;margin:0 2mm 1.5mm;min-width:5mm;}}
-.toc-pg{{font-family:'BookUI';font-size:9.5pt;font-weight:700;color:{m};min-width:6mm;text-align:right;}}
+.toc-pg{{font-family:'Noto Sans KR';font-size:9.5pt;font-weight:700;color:{m};min-width:6mm;text-align:right;}}
 @footnote{{margin:0;padding:0;}}
-.fn{{float:footnote;font-family:'BookUI';font-size:8.5pt;color:#555;line-height:1.6;}}
+.fn{{float:footnote;font-family:'Noto Sans KR';font-size:8.5pt;color:#555;line-height:1.6;}}
 .fn::footnote-call{{font-size:6.5pt;vertical-align:super;color:{m};font-weight:700;}}
 .fn::footnote-marker{{font-size:6.5pt;color:{m};font-weight:700;margin-right:1mm;}}
 .ref-section{{page-break-before:always;margin-top:8mm;}}
-.ref-title{{font-family:'BookUI';font-size:14pt;font-weight:900;color:{md};margin-bottom:4mm;string-set:ct "참고문헌";}}
+.ref-title{{font-family:'Noto Sans KR';font-size:14pt;font-weight:900;color:{md};margin-bottom:4mm;string-set:ct "참고문헌";}}
 .ref-rule{{height:2.5pt;background:{m};margin-bottom:3px;}}
-.ref-item{{font-family:'BookUI';font-size:9pt;line-height:1.8;color:#333;margin-bottom:2mm;padding-left:8mm;text-indent:-8mm;}}
+.ref-item{{font-family:'Noto Sans KR';font-size:9pt;line-height:1.8;color:#333;margin-bottom:2mm;padding-left:8mm;text-indent:-8mm;}}
 .ref-num{{color:{m};font-weight:700;}}
 .idx-section{{page-break-before:always;margin-top:8mm;}}
-.idx-title{{font-family:'BookUI';font-size:14pt;font-weight:900;color:{md};margin-bottom:4mm;string-set:ct "색인";}}
+.idx-title{{font-family:'Noto Sans KR';font-size:14pt;font-weight:900;color:{md};margin-bottom:4mm;string-set:ct "색인";}}
 .idx-rule{{height:2.5pt;background:{m};margin-bottom:3px;}}
 .idx-grid{{column-count:3;column-gap:6mm;margin-top:4mm;}}
-.idx-letter{{font-family:'BookUI';font-size:11pt;font-weight:900;color:{m};margin-top:5mm;margin-bottom:2mm;border-bottom:1pt solid {ml2};padding-bottom:1mm;break-after:avoid;column-span:none;}}
-.idx-item{{font-family:'BookUI';font-size:9pt;line-height:1.7;color:#333;break-inside:avoid;}}
+.idx-letter{{font-family:'Noto Sans KR';font-size:11pt;font-weight:900;color:{m};margin-top:5mm;margin-bottom:2mm;border-bottom:1pt solid {ml2};padding-bottom:1mm;break-after:avoid;column-span:none;}}
+.idx-item{{font-family:'Noto Sans KR';font-size:9pt;line-height:1.7;color:#333;break-inside:avoid;}}
 .idx-high{{font-weight:700;color:#1E1E2E;}}
 .idx-variant{{font-size:8.5pt;color:#666;padding-left:4mm;display:block;}}
 {col}"""
@@ -222,10 +217,10 @@ def render_block(b, t, chapter_images, ch_count_ref, colophon_data, author):
     if bt == 'title_page':
         return f'''<div style="height:220mm;display:flex;flex-direction:column;justify-content:center;">
 <div style="border-left:4pt solid {m};padding:8mm 10mm;margin-bottom:8mm;">
-<div style="font-family:BookUI;font-size:26pt;font-weight:900;color:{md};line-height:1.4;">{c}</div>
-<div style="font-family:BookUI;font-size:12pt;color:#888;margin-top:4mm;">{sub}</div>
+<div style="font-family:'Noto Sans KR';font-size:26pt;font-weight:900;color:{md};line-height:1.4;">{c}</div>
+<div style="font-family:'Noto Sans KR';font-size:12pt;color:#888;margin-top:4mm;">{sub}</div>
 </div>
-<div style="font-family:BookUI;font-size:11pt;color:#555;text-align:right;">{author}</div>
+<div style="font-family:'Noto Sans KR';font-size:11pt;color:#555;text-align:right;">{author}</div>
 </div>'''
 
     elif bt == 'colophon':
@@ -347,7 +342,7 @@ def render_block(b, t, chapter_images, ch_count_ref, colophon_data, author):
 
     elif bt == 'chart':
         svg=gen_chart(b.get('chart_type','bar'),b.get('data',[]),t)
-        title_h=f'<div style="font-family:BookUI;font-size:10pt;font-weight:700;color:{md};margin-bottom:3mm;">{b.get("title","")}</div>' if b.get("title") else ''
+        title_h=f'<div style="font-family:'Noto Sans KR';font-size:10pt;font-weight:700;color:{md};margin-bottom:3mm;">{b.get("title","")}</div>' if b.get("title") else ''
         cap_h=f'<div class="chart-cap">{b.get("caption","")}</div>' if b.get("caption") else ''
         return f'<div class="chart-wrap keep">{title_h}{svg}{cap_h}</div>'
 
