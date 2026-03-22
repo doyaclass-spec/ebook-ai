@@ -209,6 +209,7 @@ td.tl{{text-align:left;}}td.tb{{font-weight:700;color:{md};}}tr.hl td{{backgroun
 
 
 def render_block(b, t, chapter_images, ch_count_ref, colophon_data, author):
+    if not isinstance(b, dict): return ''
     bt = b.get('type',''); c = b.get('content',''); sub = b.get('sub','')
     if isinstance(c, dict):
         sub = sub or c.get('subtitle','')
