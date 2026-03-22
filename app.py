@@ -342,7 +342,7 @@ def render_block(b, t, chapter_images, ch_count_ref, colophon_data, author):
 
     elif bt == 'chart':
         svg=gen_chart(b.get('chart_type','bar'),b.get('data',[]),t)
-        title_h=f'<div style="font-family:'Noto Sans KR';font-size:10pt;font-weight:700;color:{md};margin-bottom:3mm;">{b.get("title","")}</div>' if b.get("title") else ''
+        title_h=f'<div style="font-family:Noto Sans KR;font-size:10pt;font-weight:700;color:{md};margin-bottom:3mm;">{b.get("title","")}</div>' if b.get("title") else ''
         cap_h=f'<div class="chart-cap">{b.get("caption","")}</div>' if b.get("caption") else ''
         return f'<div class="chart-wrap keep">{title_h}{svg}{cap_h}</div>'
 
