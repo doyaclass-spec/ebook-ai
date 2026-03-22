@@ -83,9 +83,9 @@ def get_css(t, paper='a4', layout='1col', typo=None, print_mode=False, watermark
     return f"""
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=Noto+Serif+KR:wght@400;600;700&display=swap');
 @page{{size:{pw}mm {ph}mm;margin:{ps['mt']+bl}mm {ps['mr']+bl}mm {ps['mb']+bl}mm {ps['ml']+bl}mm;
-  @top-left{{content:string(bt);font-family:'Noto Sans KR';font-size:8pt;color:{m};font-weight:700;vertical-align:bottom;padding-bottom:4mm;border-bottom:1.8pt solid {m};}}
-  @top-right{{content:string(ct);font-family:'Noto Sans KR';font-size:8pt;color:#888;vertical-align:bottom;padding-bottom:4mm;border-bottom:.4pt solid #CCC;}}
-  @bottom-center{{content:counter(page);font-family:'Noto Sans KR';font-size:9pt;font-weight:700;color:#FFF;background:{m};border-radius:50%;width:6mm;height:6mm;text-align:center;vertical-align:middle;padding-top:1.2mm;}}
+  @top-left{{content:string(bt);font-family:'Noto Sans KR';font-size:7.5pt;color:{m};font-weight:700;vertical-align:bottom;padding-bottom:5mm;border-bottom:1.5pt solid {m};}}
+  @top-right{{content:string(ct);font-family:'Noto Sans KR';font-size:7.5pt;color:#999;vertical-align:bottom;padding-bottom:5mm;border-bottom:.3pt solid #DDD;}}
+  @bottom-center{{content:counter(page);font-family:'Noto Sans KR';font-size:8.5pt;font-weight:700;color:#FFF;background:{m};border-radius:50%;width:5.5mm;height:5.5mm;text-align:center;vertical-align:middle;padding-top:1mm;}}
 }}
 @page:left{{margin-left:{ps['ml']+bl+5}mm;margin-right:{ps['mr']+bl}mm;@top-right{{content:none;border:none;}}}}
 @page:right{{margin-left:{ps['ml']+bl}mm;margin-right:{ps['mr']+bl+5}mm;@top-left{{content:none;border:none;}}}}
@@ -105,11 +105,11 @@ body{{font-family:'Noto Serif KR','Noto Serif CJK KR',serif;font-size:{fs}pt;lin
 .colophon-copy{{font-family:'Noto Sans KR';font-size:8pt;color:#aaa;margin-top:6mm;border-top:0.5pt solid #EEE;padding-top:4mm;line-height:1.7;}}
 /* 헤더/섹션 */
 .ptitle-reg{{string-set:bt content();display:none;}}
-.prologue-title{{font-family:'Noto Sans KR';font-size:22pt;font-weight:900;color:{md};margin-top:10mm;margin-bottom:2mm;string-set:ct "프롤로그";}}
+.prologue-title{{font-family:'Noto Sans KR';font-size:20pt;font-weight:900;color:{md};margin-top:14mm;margin-bottom:4mm;string-set:ct "프롤로그";}}
 .author-line{{font-family:'Noto Sans KR';font-size:11pt;color:#555;text-align:right;margin-top:8mm;}}
-.dual-line{{height:6pt;margin-bottom:6mm;position:relative;}}
-.dual-line::before{{content:'';position:absolute;top:0;left:0;right:0;height:2.5pt;background:{m};}}
-.dual-line::after{{content:'';position:absolute;bottom:0;left:0;right:0;height:.6pt;background:#CCC;}}
+.dual-line{{height:8pt;margin-bottom:8mm;position:relative;}}
+.dual-line::before{{content:'';position:absolute;top:0;left:0;right:0;height:2pt;background:{m};}}
+.dual-line::after{{content:'';position:absolute;bottom:0;left:0;right:0;height:.4pt;background:#DDD;}}
 .part-opener{{page-break-before:always;page-break-after:always;height:200mm;display:flex;flex-direction:column;justify-content:center;}}
 .part-box{{background:{mp};border-radius:6pt;padding:14mm 12mm 12mm;position:relative;overflow:hidden;min-height:70mm;}}
 .pd1{{position:absolute;right:-15mm;top:-15mm;width:70mm;height:70mm;border-radius:50%;background:rgba(255,255,255,.06);}}
@@ -117,42 +117,43 @@ body{{font-family:'Noto Serif KR','Noto Serif CJK KR',serif;font-size:{fs}pt;lin
 .pd3{{position:absolute;right:0;top:0;bottom:0;width:35%;background:{m};border-radius:0 6pt 6pt 0;}}
 .pd4{{position:absolute;right:35%;top:0;bottom:0;width:5mm;background:{mp};}}
 .pbn{{position:absolute;right:4%;bottom:5mm;font-family:'Noto Sans KR';font-size:72pt;font-weight:900;color:rgba(255,255,255,.18);line-height:1;}}
-.plbl{{font-family:'Noto Sans KR';font-size:9.5pt;font-weight:700;color:{acc};letter-spacing:2pt;margin-bottom:3mm;position:relative;z-index:2;}}
-.psep{{height:.5pt;background:rgba(255,255,255,.25);margin-bottom:5mm;width:60%;position:relative;z-index:2;}}
-.ptitle{{font-family:'Noto Sans KR';font-size:20pt;font-weight:900;color:#FFF;line-height:1.5;position:relative;z-index:2;width:58%;}}
+.plbl{{font-family:'Noto Sans KR';font-size:9pt;font-weight:700;color:{acc};letter-spacing:2.5pt;margin-bottom:4mm;position:relative;z-index:2;}}
+.psep{{height:.5pt;background:rgba(255,255,255,.25);margin-bottom:6mm;width:60%;position:relative;z-index:2;}}
+.ptitle{{font-family:'Noto Sans KR';font-size:19pt;font-weight:900;color:#FFF;line-height:1.55;position:relative;z-index:2;width:58%;}}
 .psub{{font-family:'Noto Sans KR';font-size:9.5pt;color:rgba(170,220,190,.9);margin-top:5mm;position:relative;z-index:2;}}
 .pintro{{margin-top:8mm;font-size:{fs}pt;color:#555;line-height:{lh};}}
 .chapter-img{{width:100%;max-height:55mm;object-fit:cover;border-radius:4pt;margin-bottom:6mm;display:block;}}
-.ch-wrap{{margin-top:8mm;margin-bottom:8mm;}}
-.ch-num{{font-family:'Noto Sans KR';font-size:8.5pt;font-weight:700;color:{m};letter-spacing:1.5pt;margin-bottom:1.5mm;string-set:ct content();}}
-.ch-title{{font-family:'Noto Sans KR';font-size:18pt;font-weight:900;color:#1E1E2E;line-height:1.45;margin-bottom:4mm;}}
-.sec-num{{font-family:'Noto Sans KR';font-size:8pt;font-weight:700;color:{m};letter-spacing:1pt;margin-top:8mm;margin-bottom:1.5mm;}}
-.sec-title{{font-family:'Noto Sans KR';font-size:14.5pt;font-weight:900;color:#1E1E2E;line-height:1.5;margin-bottom:2mm;}}
-.sec-line{{height:.6pt;background:{ml2};margin-bottom:5mm;}}
-.sub-h{{font-family:'Noto Sans KR';font-size:11pt;font-weight:700;color:{md};margin-top:7mm;margin-bottom:3mm;}}
-p{{margin-bottom:3.5mm;text-indent:{ind}mm;}}p.ni{{text-indent:0;}}
-.tip{{margin:5mm 0;border-radius:5pt;overflow:hidden;page-break-inside:avoid;}}
-.tip-h{{background:{m};padding:2.5mm 5mm;font-family:'Noto Sans KR';font-size:10pt;font-weight:700;color:#FFF;}}
-.tip-b{{background:{ml2};padding:4mm 5mm;}}
-.tip-b p{{text-indent:0;font-family:'Noto Sans KR';font-size:10pt;line-height:1.8;color:#2D2D2D;margin-bottom:1.5mm;}}
-.warn{{background:#FFFBEA;border:1.5pt solid #D4A017;border-radius:5pt;padding:4mm 5mm;margin:5mm 0;page-break-inside:avoid;}}
-.warn-h{{font-family:'Noto Sans KR';font-size:10pt;font-weight:700;color:#D4A017;margin-bottom:2mm;}}
-.warn p{{text-indent:0;font-family:'Noto Sans KR';font-size:9.5pt;line-height:1.8;margin-bottom:1mm;}}
-.quote{{border-left:3.5pt solid {m};padding:4mm 6mm;margin:6mm 0;background:{pal};page-break-inside:avoid;}}
-.quote p{{text-indent:0;font-family:'Noto Serif KR';font-size:12pt;font-weight:600;color:{md};line-height:1.8;margin:0;}}
+.ch-wrap{{margin-top:14mm;margin-bottom:10mm;}}
+.ch-num{{font-family:'Noto Sans KR';font-size:8pt;font-weight:700;color:{m};letter-spacing:2.5pt;margin-bottom:3mm;text-transform:uppercase;string-set:ct content();}}
+.ch-title{{font-family:'Noto Sans KR';font-size:18pt;font-weight:900;color:#1E1E2E;line-height:1.45;margin-bottom:6mm;}}
+.ch-wrap+p::first-letter{{font-family:'Noto Serif KR';font-size:32pt;font-weight:700;color:{m};float:left;line-height:0.8;margin-right:2mm;margin-top:2mm;}}
+.sec-num{{font-family:'Noto Sans KR';font-size:8pt;font-weight:700;color:{m};letter-spacing:1.5pt;margin-top:10mm;margin-bottom:2mm;}}
+.sec-title{{font-family:'Noto Sans KR';font-size:14pt;font-weight:900;color:#1E1E2E;line-height:1.5;margin-bottom:3mm;}}
+.sec-line{{height:.8pt;background:{m};margin-bottom:6mm;width:40mm;}}
+.sub-h{{font-family:'Noto Sans KR';font-size:10.5pt;font-weight:700;color:{md};margin-top:8mm;margin-bottom:3.5mm;padding-bottom:2mm;border-bottom:.4pt solid {ml2};}}
+p{{margin-bottom:4mm;text-indent:{ind}mm;}}p.ni{{text-indent:0;}}
+.tip{{margin:6mm 0;border-radius:6pt;overflow:hidden;border-left:4pt solid {m};page-break-inside:avoid;}}
+.tip-h{{background:{m};padding:3mm 5mm;font-family:'Noto Sans KR';font-size:9.5pt;font-weight:700;color:#FFF;letter-spacing:0.3pt;}}
+.tip-b{{background:{pal};padding:5mm 6mm;}}
+.tip-b p{{text-indent:0;font-family:'Noto Sans KR';font-size:9.5pt;line-height:1.85;color:#2D2D2D;margin-bottom:2mm;}}
+.warn{{background:#FFFDF5;border:1pt solid #E8D48B;border-left:4pt solid #D4A017;border-radius:6pt;padding:5mm 6mm;margin:6mm 0;page-break-inside:avoid;}}
+.warn-h{{font-family:'Noto Sans KR';font-size:9.5pt;font-weight:700;color:#B8860B;margin-bottom:3mm;}}
+.warn p{{text-indent:0;font-family:'Noto Sans KR';font-size:9pt;line-height:1.85;margin-bottom:1.5mm;}}
+.quote{{border-left:3pt solid {m};padding:5mm 8mm;margin:8mm 4mm;background:{pal};border-radius:0 4pt 4pt 0;page-break-inside:avoid;}}
+.quote p{{text-indent:0;font-family:'Noto Serif KR';font-size:11.5pt;font-weight:400;font-style:italic;color:{md};line-height:1.85;margin:0;}}
 .tbl-wrap{{margin:5mm 0;page-break-inside:avoid;}}
 .tbl-cap{{font-family:'Noto Sans KR';font-size:8.5pt;color:#888;text-align:center;margin-top:1.5mm;}}
 table{{width:100%;border-collapse:collapse;font-family:'Noto Sans KR';font-size:9pt;}}
-thead tr{{background:{m};color:#FFF;}}
-thead th{{padding:3mm;text-align:center;font-weight:700;border-bottom:2pt solid {md};}}
+thead tr{{background:{md};color:#FFF;}}
+thead th{{padding:3.5mm 3mm;text-align:center;font-weight:700;font-size:8.5pt;letter-spacing:0.5pt;border-bottom:2.5pt solid {m};}}
 tbody tr:nth-child(odd){{background:#FFF;}}tbody tr:nth-child(even){{background:{pal};}}
-tbody td{{padding:2.5mm 3mm;border-bottom:.4pt solid #DDD;text-align:center;vertical-align:middle;}}
+tbody td{{padding:3mm 3.5mm;border-bottom:.3pt solid #E5E5E5;text-align:center;vertical-align:middle;font-size:8.5pt;}}
 td.tl{{text-align:left;}}td.tb{{font-weight:700;color:{md};}}tr.hl td{{background:#D4EDDA!important;font-weight:700;color:{md};}}
 .info-table{{width:100%;border-collapse:collapse;font-family:'Noto Sans KR';font-size:9pt;margin:5mm 0;page-break-inside:avoid;}}
 .info-table thead tr{{background:{m};color:#FFF;}}
-.info-table thead th{{padding:3mm 4mm;text-align:left;font-weight:700;}}
-.info-table tbody tr{{border-bottom:1pt solid {ml2};}}
-.info-table tbody td{{padding:3mm 4mm;vertical-align:middle;}}
+.info-table thead th{{padding:3.5mm 5mm;text-align:left;font-weight:700;font-size:8.5pt;letter-spacing:0.5pt;}}
+.info-table tbody tr{{border-bottom:.5pt solid #EEE;}}
+.info-table tbody td{{padding:3.5mm 5mm;vertical-align:middle;}}
 .info-table tbody tr:nth-child(even){{background:{pal};}}
 .badge{{display:inline-block;padding:1mm 4mm;border-radius:20pt;font-size:8.5pt;font-weight:700;}}
 .badge-green{{background:{ml2};color:{md};}}.badge-gray{{background:#F1F5F9;color:#475569;}}
@@ -161,28 +162,28 @@ td.tl{{text-align:left;}}td.tb{{font-weight:700;color:{md};}}tr.hl td{{backgroun
 .prog-bar{{height:4mm;border-radius:10pt;background:{m};}}
 .chart-wrap{{margin:5mm 0;page-break-inside:avoid;text-align:center;}}
 .chart-cap{{font-family:'Noto Sans KR';font-size:8.5pt;color:#888;margin-top:2mm;}}
-.numlist{{list-style:none;margin:4mm 0;}}
-.numlist li{{display:flex;align-items:flex-start;margin-bottom:3mm;}}
-.nc{{display:inline-flex;align-items:center;justify-content:center;width:6mm;height:6mm;min-width:6mm;border-radius:50%;background:{m};color:#FFF;font-family:'Noto Sans KR';font-size:8pt;font-weight:700;margin-right:3mm;margin-top:1.5mm;}}
+.numlist{{list-style:none;margin:5mm 0;}}
+.numlist li{{display:flex;align-items:flex-start;margin-bottom:4.5mm;}}
+.nc{{display:inline-flex;align-items:center;justify-content:center;width:5.5mm;height:5.5mm;min-width:5.5mm;border-radius:50%;background:{m};color:#FFF;font-family:'Noto Sans KR';font-size:7.5pt;font-weight:700;margin-right:3mm;margin-top:2mm;}}
 .numlist li .tx{{font-family:'Noto Serif KR';font-size:{fs}pt;line-height:{lh};color:#2D2D2D;}}
 .cards{{display:flex;gap:3mm;margin:5mm 0;}}
-.card{{flex:1;border:.5pt solid {ml2};border-radius:5pt;overflow:hidden;page-break-inside:avoid;}}
-.card-top{{background:{pal};border-bottom:1.5pt solid {m};padding:3mm 2mm;text-align:center;}}
-.card-num{{font-family:'Noto Sans KR';font-size:16pt;font-weight:900;color:{m};line-height:1;margin-bottom:1mm;}}
-.card-ttl{{font-family:'Noto Sans KR';font-size:9pt;font-weight:700;color:{md};line-height:1.4;}}
-.card-body{{padding:3mm 2mm;text-align:center;font-family:'Noto Sans KR';font-size:8.5pt;color:#555;line-height:1.6;}}
-.outro{{margin-top:12mm;display:flex;align-items:center;background:{pal};border-radius:4pt;overflow:hidden;}}
-.outro-lbl{{background:{m};padding:2.5mm 4mm;font-family:'Noto Sans KR';font-size:8.5pt;font-weight:700;color:#FFF;white-space:nowrap;}}
-.outro-tx{{padding:2.5mm 4mm;font-family:'Noto Sans KR';font-size:9.5pt;color:#2D2D2D;}}
-.toc-title{{font-family:'Noto Sans KR';font-size:22pt;font-weight:900;color:{md};margin-top:8mm;margin-bottom:2mm;string-set:ct "목차";}}
-.toc-part{{display:flex;align-items:center;margin-top:5mm;margin-bottom:2mm;padding:3mm;background:{pal};border-left:3pt solid {m};}}
+.card{{flex:1;border:.4pt solid #E8E8E8;border-radius:6pt;overflow:hidden;page-break-inside:avoid;box-shadow:0 1pt 3pt rgba(0,0,0,0.08);}}
+.card-top{{background:{pal};border-bottom:1pt solid {m};padding:4mm 3mm;text-align:center;}}
+.card-num{{font-family:'Noto Sans KR';font-size:15pt;font-weight:900;color:{m};line-height:1;margin-bottom:1.5mm;}}
+.card-ttl{{font-family:'Noto Sans KR';font-size:8.5pt;font-weight:700;color:{md};line-height:1.4;}}
+.card-body{{padding:4mm 3mm;text-align:center;font-family:'Noto Sans KR';font-size:8pt;color:#555;line-height:1.7;}}
+.outro{{margin-top:14mm;display:flex;align-items:center;background:{pal};border-radius:5pt;overflow:hidden;}}
+.outro-lbl{{background:{m};padding:3mm 5mm;font-family:'Noto Sans KR';font-size:8pt;font-weight:700;color:#FFF;white-space:nowrap;letter-spacing:0.5pt;}}
+.outro-tx{{padding:3mm 5mm;font-family:'Noto Sans KR';font-size:9pt;color:#2D2D2D;}}
+.toc-title{{font-family:'Noto Sans KR';font-size:20pt;font-weight:900;color:{md};margin-top:14mm;margin-bottom:4mm;string-set:ct "목차";}}
+.toc-part{{display:flex;align-items:center;margin-top:6mm;margin-bottom:3mm;padding:3.5mm 4mm;background:{pal};border-left:2.5pt solid {m};}}
 .toc-part .tt{{font-family:'Noto Sans KR';font-size:10.5pt;font-weight:700;color:{md};flex:1;}}
-.toc-ch{{display:flex;align-items:baseline;margin:2.5mm 0 .5mm;}}
+.toc-ch{{display:flex;align-items:baseline;margin:3mm 0 1mm;}}
 .toc-ch .tt{{font-family:'Noto Sans KR';font-size:10pt;font-weight:700;color:#1E1E2E;flex:1;}}
-.toc-sec{{display:flex;align-items:baseline;margin:1mm 0;padding-left:8mm;}}
+.toc-sec{{display:flex;align-items:baseline;margin:1.5mm 0;padding-left:8mm;}}
 .toc-sec .tt{{font-family:'Noto Sans KR';font-size:9.5pt;color:#555;flex:1;}}
-.toc-dots{{flex:1;border-bottom:.5pt dotted #CCC;margin:0 2mm 1.5mm;min-width:5mm;}}
-.toc-pg{{font-family:'Noto Sans KR';font-size:9.5pt;font-weight:700;color:{m};min-width:6mm;text-align:right;}}
+.toc-dots{{flex:1;border-bottom:.4pt dotted #DDD;margin:0 2mm 1.5mm;min-width:5mm;}}
+.toc-pg{{font-family:'Noto Sans KR';font-size:9pt;font-weight:700;color:{m};min-width:6mm;text-align:right;}}
 @footnote{{margin:0;padding:0;}}
 .fn{{float:footnote;font-family:'Noto Sans KR';font-size:8.5pt;color:#555;line-height:1.6;}}
 .fn::footnote-call{{font-size:6.5pt;vertical-align:super;color:{m};font-weight:700;}}
