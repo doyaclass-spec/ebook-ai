@@ -210,6 +210,10 @@ td.tl{{text-align:left;}}td.tb{{font-weight:700;color:{md};}}tr.hl td{{backgroun
 
 def render_block(b, t, chapter_images, ch_count_ref, colophon_data, author):
     bt = b.get('type',''); c = b.get('content',''); sub = b.get('sub','')
+    if isinstance(c, dict):
+        sub = sub or c.get('subtitle','')
+        author = c.get('author','') or author
+        c = c.get('title','') or c.get('text','') or ''
     if not isinstance(c, str): c = str(c)
     if not isinstance(sub, str): sub = str(sub)
     m=t['main']; md=t['dark']; ml2=t['light']; pal=t['pale']; acc=t['accent']
