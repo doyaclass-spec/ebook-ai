@@ -863,7 +863,7 @@ function showResult(){
 function buildBlockEditor(blocks){
   const list=document.getElementById('block-edit-list');
   list.innerHTML=blocks.map((b,i)=>{
-    const preview=(b.content||b.sub||'').split('\n')[0].slice(0,30);
+    const raw=b.content||b.sub||''; const txt=typeof raw==='string'?raw:raw.title||raw.text||JSON.stringify(raw); const preview=txt.split('\n')[0].slice(0,30);
     return `<div class="be-item">
       <span class="be-tag ${tcls[b.type]||'cn'}">${tlbl[b.type]||b.type}</span>
       <span class="be-text">${preview||'—'}</span>
