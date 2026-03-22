@@ -412,6 +412,7 @@ def render_block(b, t, chapter_images, ch_count_ref, colophon_data, author):
 
 
 def gen_chart(chart_type, data, t):
+    data = [d for d in data if isinstance(d, dict)]
     if not data: return ''
     W,H=500,240; m=t['main']
     if chart_type=='bar':
